@@ -18,5 +18,7 @@ html {
 }
 
 body {
+  font-family: "Arial", sans-serif;
   margin-bottom: 60px;
+  box-sizing: border-box;
 }
