@@ -9,11 +9,13 @@
     }
   },
   "profiles": {
-    "http": {
+    "httpWatch": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "applicationUrl": "http://localhost:5009",
+      "hotReloadEnabled": true,
+      "hotReloadProfile": "aspnetcore",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

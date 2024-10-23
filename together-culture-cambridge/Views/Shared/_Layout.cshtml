@@ -3,13 +3,45 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>@ViewData["Title"] - together_culture_cambridge</title>
+    <title>@ViewData["Title"] - Together Culture Cambridge</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
-    <link rel="stylesheet" href="~/together_culture_cambridge.styles.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/main.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="together-culture-cambridge.styles.css" asp-append-version="true"/>
 </head>
 <body>
-<header>
+
+<nav>
+    <div class="desktop-navigation ">
+        <div class="navigation-main d-flex align-items-center justify-content-between">
+            <a asp-area="" asp-controller="Home" asp-action="Index" class="main-logo">
+                <img alt="together culture"
+                     src="~/images/tc-logo.png"
+                />
+            </a>
+            
+            <ul class="main-links d-flex align-items-center  justify-content-center">
+                <li>
+                    <a class="nav-link">About</a>
+                </li>
+                
+                <li>
+                    <a class="nav-link">Memberships</a>
+                </li>
+                
+                <li>
+                    <a class="nav-link">Blog</a>
+                </li>
+            </ul>
+            
+            <div class="auth-links d-flex align-items-center justify-content-center">
+                <a asp-area="" asp-controller="Auth" asp-action="Login" class="button login-btn mx-2">Log in</a>
+                <a asp-area="" asp-controller="Auth" asp-action="Register" class="button button-secondary register-btn">Register</a>
+            </div>
+        </div>
+    </div>
+</nav>
+<!--<header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container-fluid">
             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">together_culture_cambridge</a>
@@ -29,18 +61,76 @@
             </div>
         </div>
     </nav>
-</header>
-<div class="container">
+</header>-->
     <main role="main" class="pb-3">
         @RenderBody()
+        
+        
     </main>
-</div>
 
-<footer class="border-top footer text-muted">
+<footer>
+    <div class="container page-section">
+        <ul class="d-flex">
+            <li>
+                <span class="link-item">
+                    <a href="#">Our Story</a>
+                </span>
+                
+                <span>
+                    <a href="#">Contact</a>
+                </span>
+                
+                <span>
+                    <a href="#">Blog</a>
+                </span>
+            </li>
+
+
+            <li>
+                <span class="link-item">
+                    <a href="#">Events</a>
+                </span>
+
+                <span>
+                    <a href="#">Memberships</a>
+                </span>
+
+                <span>
+                    <a href="#">The Treatment Room</a>
+                </span>
+            </li>
+
+            <li>
+                <span class="link-item">
+                    <a href="#">Place Hire</a>
+                </span>
+
+                <span>
+                    <a href="#">Corporate Experiences</a>
+                </span>
+            </li>
+            <li>
+                <span class="link-item">
+                    <a href="#">Shop</a>
+                </span>
+
+                <span>
+                    <a href="#">Privacy Policy</a>
+                </span>
+                
+            </li>
+        </ul>
+        <div class="flex justify-content-center rights text-center mt-5 pt-3">
+            <span>&copy; </span>
+            <span>@DateTime.Now.Year Together Culture. All rights reserved.</span>
+        </div>
+    </div>
+</footer>
+<!--<footer class="border-top footer text-muted">
     <div class="container">
         &copy; 2024 - together_culture_cambridge - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
     </div>
-</footer>
+</footer>-->
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
