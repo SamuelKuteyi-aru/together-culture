@@ -28,7 +28,7 @@
     position: absolute;
     top: -108px;
     height: 108px;
-    width: 100vw;
+    width: calc(100% + 150px);
     background: #ffa5a5;
     left: -75px;
     z-index: -1;
@@ -40,19 +40,19 @@
 }
 .banner-bg .bg-content .bg-content-upper .content:before,
 .banner-bg .bg-content .bg-content-upper .content:after{
-    width: 108px;
+    width: 75px;
     height: 100%;
     content: '';
     position: absolute;
     background: #ffc4c4;
 }
 .banner-bg .bg-content .bg-content-upper .content:before {
-    left: -33px;
+    left: 0;
     border-radius: 0 80% 0 0 / 0 100% 0 0;
 }
 
 .banner-bg .bg-content .bg-content-upper .content:after {
-    right: -33px;
+    right: 0;
     border-radius: 80% 0 0 0 / 100% 0 0 0;
 }
 
