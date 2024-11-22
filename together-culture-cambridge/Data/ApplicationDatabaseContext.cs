@@ -16,5 +16,8 @@ namespace together_culture_cambridge.Data
 
         public DbSet<together_culture_cambridge.Models.Membership> Membership { get; set; } = default!;
         public DbSet<together_culture_cambridge.Models.EndUser> EndUser { get; set; } = default!;
+        public DbSet<together_culture_cambridge.Models.Discount> Discount { get; set; } = default!;
+        public DbSet<together_culture_cambridge.Models.DiscountUser> DiscountUser { get; set; } = default!;
+        public DbSet<together_culture_cambridge.Models.Admin> Admin { get; set; } = default!;
     }
 }

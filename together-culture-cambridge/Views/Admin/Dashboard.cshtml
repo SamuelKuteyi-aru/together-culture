@@ -1,0 +1,48 @@
+@{
+    ViewBag.Title = "Admin Dashboard";
+    Layout = "_AdminLayout";
+}
+
+<div class="header-section d-flex flex-column align-items-center">
+    <div class="user-welcome">
+        <span class="prepend">Hello,</span> <span class="user-name"></span>
+    </div>
+    
+    <div class="header-text">
+        Here's a list of signed up customers whose accounts
+        are currently pending approval.
+    </div>
+</div>
+
+
+<div class="user-list-section">
+    <div class="search-section">
+        <div class="search-box">
+            <img src="~/icons/search-icon.svg"
+                 alt="search for an unapproved member"
+                 class="search-icon "
+            />
+            <input
+                class="base-input"
+                type="text"
+                placeholder="Search for an unapproved member"/>
+        </div>
+    </div>
+
+
+    <div class="loading-section  py-5 align-items-center justify-content-center">
+        <div class="spinner alt-spinner mr-2"></div>
+        <span>Loading unapproved accounts..</span>
+    </div>
+    
+    <div class="load-error-section error-section align-items-center justify-content-center py-5 d-none">
+        <img src="~/icons/icon-exclamation.svg"
+             alt="error exclamation"
+        />
+
+        <span class="load-text">Error loading admin account</span>
+    </div>
+    <div class="user-grid py-5">
+        
+    </div>
+</div>

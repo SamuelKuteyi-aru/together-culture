@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+//'using Microsoft.Extensions.DependencyInjection;
 using together_culture_cambridge.Data;
 using together_culture_cambridge.Models;
 
@@ -17,11 +17,11 @@ builder.Services.AddControllersWithViews();
 var app = builder.Build();
 
 
-using (var serviceScope = app.Services.CreateScope())
+/*using (var serviceScope = app.Services.CreateScope())
 {
     var services = serviceScope.ServiceProvider;
-    MembershipSeed.Initialize(services);
-}
+    AdminSeed.Initialize(services);
+}*/
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -32,6 +32,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseDefaultFiles();
 app.UseStaticFiles();
 
 app.UseRouting();

@@ -1,12 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text.Json.Nodes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Net.Http.Headers;
+using Newtonsoft.Json.Linq;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 using together_culture_cambridge.Data;
 using together_culture_cambridge.Models;
+using together_culture_cambridge.Helpers;
+using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
+
 
 namespace together_culture_cambridge.Controllers
 {
@@ -17,6 +21,94 @@ namespace together_culture_cambridge.Controllers
         public EndUserController(ApplicationDatabaseContext context)
         {
             _context = context;
+        }
+
+        // Route: /EndUser/Login
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        // Route: /EndUser/Unapproved
+        [HttpGet]
+
+        public async Task<IActionResult> Unapproved()
+        {
+            int adminId = Methods.ReadAdminCookie(Request);
+            if (adminId == -1)
+            {
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Json(new { message = "Unauthorized request" });
+            }
+
+            var guestMembership = await _context.Membership
+                .Where(m => m.MembershipType == Enum.Parse<Membership.MembershipEnum>("Guest")).FirstOrDefaultAsync();
+            Console.WriteLine("Guest membership: {0}", guestMembership?.Id);
+            var userList = await _context.EndUser.Where(user => !user.Approved && (guestMembership != null && user.MembershipId != guestMembership.Id)).ToListAsync();
+
+            JsonArray users = new JsonArray();
+            foreach (var endUser in userList)
+            {
+                var membership = await _context.Membership.Where(membership => membership.Id == endUser.MembershipId).FirstOrDefaultAsync();
+                if (membership != null)
+                {
+                    endUser.Membership = membership;
+                }
+
+                users.Add(Methods.PublicFacingUser(endUser).Value);
+            }
+
+            return Ok(users);
+
+        }
+
+        [Route("EndUser/Login")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SignIn()
+        {
+            Console.WriteLine("Signing in...");
+            StreamReader reader = new StreamReader(Request.Body);
+            var bodyString = await reader.ReadToEndAsync();
+            JObject body = JObject.Parse(bodyString);
+
+            var email = body["email"]?.ToString();
+            var password = body["password"]?.ToString();
+
+            if (String.IsNullOrEmpty(email) || String.IsNullOrEmpty(password))
+            {
+                Response.StatusCode = StatusCodes.Status400BadRequest;
+                return Json(new { message = "Email and password are required" } );
+            }
+
+
+            var existingUserList = await _context.EndUser.Where(e => e.Email == email).ToListAsync();
+            if (existingUserList.Count == 0)
+            {
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Json(new { message = "This user does not exist in our system" } );
+            }
+            
+            var existingUser = existingUserList[0];
+            if (!BCrypt.Net.BCrypt.EnhancedVerify(password, existingUser.Password))
+            {
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Json(new { message = "Incorrect password" } );
+            }
+            
+            var byteArray = System.Text.Encoding.UTF8.GetBytes(existingUser.Id.ToString());
+            var baseUser  = Convert.ToBase64String(byteArray);
+                            
+            Response.Cookies.Append("tc-session-user", baseUser, Methods.CreateCookieOptions());
+            return  Ok(Json(new { user = Methods.PublicFacingUser(existingUser) }));
+        }
+
+        public IActionResult Register()
+        {
+            var membershipList = _context.Membership.Where(membership =>
+                membership.MembershipType != Enum.Parse<Membership.MembershipEnum>("Guest")).ToList();
+            return View(membershipList);
         }
 
         // GET: EndUser
@@ -45,28 +137,270 @@ namespace together_culture_cambridge.Controllers
             return View(endUser);
         }
 
+        [Route("EndUser/SendEmail/{email}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SendEmail(string email)
+        {
+            int generatedCode = Methods.GenerateCode();
+            string messageBody = "<h4 style='margin-bottom: 15px'>Hello from Together culture</h4>" +
+                                   "<p>Please enter the code below to verify your email address. This code expires in 30 minutes.<p>" +
+                                   $"<div style='margin: 15px 0; border-radius: 10px; background: rgba(259, 209, 209, .45); color: #481326;justify-content: center; padding: .5rem 1rem; text-align: center; width: fit-content; display: flex; font-weight: 700;'><span>{ generatedCode.ToString() }</span></div>";
+            
+            var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
+            var client = new SendGridClient(apiKey);
+            var fromEmail = new EmailAddress("osk103@student.aru.ac.uk", "TC");
+            var subject = "Verify your email address";
+            var toEmail = new EmailAddress(email, "Test user");
+            
+            
+            var message = MailHelper.CreateSingleEmail(fromEmail, toEmail, subject, "Test text content",messageBody);
+            var response = await client.SendEmailAsync(message);
+            
+            Console.WriteLine("Email: {0}", email);
+            Console.WriteLine("Response: {0}", await response.Body.ReadAsStringAsync());
+            Console.WriteLine("Message sent: {0}", generatedCode.ToString());
+
+            var responseJson = Json(new
+            {
+                code = generatedCode.ToString(),
+                createdAt = DateTime.Now,
+            });
+            return Ok(responseJson);
+        }
+
         // GET: EndUser/Create
-        public IActionResult Create()
+       /* public IActionResult Create()
         {
             ViewData["MembershipId"] = new SelectList(_context.Membership, "Id", "Id");
             return View();
-        }
+        }*/
 
         // POST: EndUser/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Route("EndUser/Create/{accountType}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,MembershipId,FirstName,LastName,Email,Password,Phone,Gender,DateOfBirth,SubscriptionDate,CheckIn,CheckOut,CreatedAt,UpdatedAt")] EndUser endUser)
+        public async Task<IActionResult> Create(string accountType)
         {
-            if (ModelState.IsValid)
+            
+            //System.Console.WriteLine("Creating end user: {0}", accountType);
+            StreamReader reader = new StreamReader(Request.Body);
+            var bodyString = await reader.ReadToEndAsync();
+            JObject body = JObject.Parse(bodyString);
+           // System.Console.WriteLine("String:" + bodyString);
+
+            
+            //return Ok(Json(new { user = "Test user "}));
+            System.Console.WriteLine("Creating account type {0}", accountType);
+            if (accountType == "Guest")
             {
-                _context.Add(endUser);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                var endUser = new EndUser
+                {
+                    Email = body["email"]?.ToString(),
+                    FirstName = body["firstName"]?.ToString(),
+                    LastName = body["lastName"]?.ToString(),
+                    Phone = body["phone"]?.ToString(),
+                    Approved = true
+                };
+
+                var bodyDob = body["dateOfBirth"]?.ToString();
+
+                if (bodyDob != null)
+                {
+                    var dateOfBirth = DateTime.Parse(bodyDob);
+                    endUser.DateOfBirth = dateOfBirth;
+                }
+
+                var memberships = from membership in _context.Membership select membership;
+                var existingMemberships = memberships.Where(membership => membership.MembershipType == Enum.Parse<Membership.MembershipEnum>("Guest"));
+                var membershipList = await existingMemberships.ToListAsync();
+                if (membershipList.Any())
+                {
+                    var membership = membershipList.First();
+                    endUser.Membership = membership;
+                    endUser.MembershipId = membership.Id;
+                }
+
+                
+                var gender = body["gender"]?.ToString();
+                if (gender != null)
+                {
+                    endUser.Gender = Enum.Parse<EndUser.GenderEnum>(gender);
+                }
+                
+                System.Console.WriteLine("Valid model {0}", ModelState.IsValid);
+                var users = from user in _context.EndUser select user;
+                var existingUsers = users.Where(user => user.Email == endUser.Email);
+                
+                var userList = await existingUsers.ToListAsync();
+                if (!userList.Any())
+                {
+                    endUser.CreatedAt = DateTime.Now;
+                    endUser.UpdatedAt = DateTime.Now;
+                    var createdUser = await _context.AddAsync(endUser);
+                    await _context.SaveChangesAsync();
+                    
+                    return Ok(Json(new
+                    {
+                        user = Methods.PublicFacingUser(endUser)
+                    }));
+                }
+                
+                // System.Console.WriteLine("User already exists");
+                Response.StatusCode = StatusCodes.Status400BadRequest;
+                return Json(new { message = "This user already exists in our system" });
             }
-            ViewData["MembershipId"] = new SelectList(_context.Membership, "Id", "Id", endUser.MembershipId);
-            return View(endUser);
+            else if (accountType == "Member")
+            { 
+
+                var password = body["password"]?.ToString();
+                var endUser = new EndUser
+                {
+                    FirstName = body["firstName"]?.ToString(),
+                    LastName = body["lastName"]?.ToString(),
+                    Email = body["email"]?.ToString(),
+                    Phone = body["phone"]?.ToString(),
+                    Password = BCrypt.Net.BCrypt.EnhancedHashPassword(password, 13),
+                    SubscriptionDate = DateTime.Now,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now,
+                };
+                
+                var bodyDob = body["dateOfBirth"]?.ToString();
+                if (!String.IsNullOrEmpty(bodyDob))
+                {
+                    var dateOfBirth = DateTime.Parse(bodyDob);
+                    endUser.DateOfBirth = dateOfBirth;
+                }
+                
+                
+                var existingUser = await _context.EndUser.FirstOrDefaultAsync(user => user.Email == endUser.Email);
+                Membership? existingMembership = null;
+                
+                if (existingUser != null)
+                {
+                    Console.WriteLine("Membership Id: {0}", existingUser.MembershipId);
+                    var membershipType = await _context.Membership.FirstOrDefaultAsync(m => m.Id == existingUser.MembershipId);
+
+
+                    existingMembership = membershipType;
+                    if (membershipType != null)
+                    {
+                                            
+                        Console.WriteLine("Membership data: {0}", membershipType.Name);
+                        if (membershipType.MembershipType != Membership.MembershipEnum.Guest)
+                        {
+                            Response.StatusCode = StatusCodes.Status400BadRequest;
+                            return Json(new { message = "This user already exists in our system" });
+                        }
+                        
+                    }
+
+                }
+
+                string? gender = body["gender"]?.ToString();
+                if (gender != null)
+                {
+                    endUser.Gender = Enum.Parse<EndUser.GenderEnum>(gender);
+                }
+                
+                
+                string? requestMembership = body["membership"]?.ToString();
+                Console.WriteLine("Request membership: {0}", requestMembership);
+                if (!String.IsNullOrEmpty(requestMembership))
+                {
+                    int membershipId = int.Parse(requestMembership);
+                    Console.WriteLine("Membership Id: {0}", membershipId);
+                    Membership? membership = await _context.Membership.FirstOrDefaultAsync(m => m.Id == membershipId);
+                    
+                   Console.WriteLine("Fetching membership");
+
+                    if (membership != null)
+                    {
+                        Console.WriteLine("Fetched membership: {0}", membership.Name);
+                        endUser.Membership = membership;
+                        endUser.MembershipId = membership.Id;
+                    }
+                }
+                
+                string? requestDiscount = body["discount"]?.ToString();
+                if (!String.IsNullOrEmpty(requestDiscount))
+                {
+                    int discountId = int.Parse(requestDiscount);
+                    Discount? discount = await _context.Discount.FirstOrDefaultAsync(d => d.Id == discountId);
+                    
+                    if (discount != null && existingUser != null)
+                    {
+                        var usedDiscount = await _context.DiscountUser.FirstOrDefaultAsync(d => d.DiscountId == discountId && d.EndUserId == existingUser.Id);
+                        
+                        if (usedDiscount == null)
+                        {
+                           await _context.DiscountUser.AddAsync(new DiscountUser
+                            {
+                                DiscountId = discount.Id,
+                                Discount = discount,
+                                EndUserId = existingUser.Id,
+                                EndUser = existingUser,
+                            });
+                        }
+                    }
+
+                }
+
+
+
+                if (existingMembership != null)
+                {
+                    if (existingMembership.MembershipType == Membership.MembershipEnum.Guest)
+                    {
+                        if (existingUser != null)
+                        {
+                            existingUser.Membership = endUser.Membership;
+                            existingUser.MembershipId = endUser.MembershipId;
+                            existingUser.SubscriptionDate = endUser.SubscriptionDate;
+                            existingUser.UpdatedAt = DateTime.Now;
+                            existingUser.Approved = false;
+                            existingUser.Password = endUser.Password;
+                            Console.WriteLine("Membership ID: {0}", endUser.MembershipId);
+                            Console.WriteLine("Updating existing user");
+                            
+                            await _context.SaveChangesAsync();
+                            
+                            var byteArray = System.Text.Encoding.UTF8.GetBytes(existingUser.Id.ToString());
+                            var baseUser  = Convert.ToBase64String(byteArray);
+                            
+                            Response.Cookies.Append("tc-session-user", baseUser, Methods.CreateCookieOptions());
+                            return  Ok(Json(new { user = Methods.PublicFacingUser(existingUser) }));
+                            
+                        }
+                    }
+                }
+                
+                
+                var createdUser = await _context.EndUser.AddAsync(endUser);
+                await _context.SaveChangesAsync();
+                var endUserEntity = createdUser.Entity;
+                var id = endUserEntity.Id.ToString();
+                
+                var textBytes = System.Text.Encoding.UTF8.GetBytes(id);
+                var textString = Convert.ToBase64String(textBytes);
+                
+                Response.Cookies.Append("tc-session-user", textString, Methods.CreateCookieOptions());
+                
+                return Ok(Json(new { user = Methods.PublicFacingUser(endUserEntity) }));
+                
+
+
+            }
+
+            //return RedirectToAction(nameof(Index));
+
+            Response.StatusCode = StatusCodes.Status500InternalServerError;
+             return Json(new { message = "Internal server error" });
+             //ViewData["MembershipId"] = new SelectList(_context.Membership, "Id", "Id", endUser.MembershipId);
+             // return View(endUser);
         }
 
         // GET: EndUser/Edit/5

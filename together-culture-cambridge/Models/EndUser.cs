@@ -15,6 +15,7 @@ public class EndUser
 
     public int MembershipId { get; set; }
     public Membership Membership { get; set; } = null!;
+    public bool Approved { get; set; } = false;
     
     [StringLength(50)]public string? FirstName { get; set;  }
     [StringLength(50)] public string? LastName { get; set; }

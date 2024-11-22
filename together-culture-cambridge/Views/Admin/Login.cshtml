@@ -1,0 +1,22 @@
+
+@{
+    ViewBag.Title = "Admin Login";
+    Layout = "_AdminAuthLayout";
+}
+
+<div class="admin-login-section">
+    <a class="d-block mx-auto w-fit mb-2" asp-area="" asp-controller="Home" asp-action="Index">
+        <img alt="Together culture"
+             src="~/images/tc-logo.png"
+             class="tc-logo"/>
+    </a>
+   
+    <div class="auth-box login-box">
+        <div class="text-center py-2 header">Admin Login</div>
+
+        @await Component.InvokeAsync("LoginForm")
+    </div>
+</div>
+
+
+

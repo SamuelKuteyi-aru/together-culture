@@ -1,0 +1,265 @@
+:root{
+    --closed-height: 47px;
+    --open-height: 250px;
+}
+.registration-section{
+    width: 800px;
+    max-width: calc(100% - 1rem);
+    padding: 2.5rem 0;
+    margin: 1.5rem auto;
+}
+
+.registration-section .header h3{
+    font-size: 2.25rem;
+}
+
+.registration-section .header p{
+    max-width: 500px;
+    line-height: 1.75rem;
+    font-size: 1rem;
+    opacity: .8;
+}
+
+.registration-box .type-list{
+    display: flex;
+}
+.registration-section .reg-type {
+    width: 50%;
+    padding: 1rem 1.5rem;
+    text-align: center;
+    font-size: 1rem;
+    position: relative;
+    transition: ease-in-out .25s;
+}
+
+.registration-section .reg-type:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 3px;
+    background: linear-gradient(to right, rgba(72, 19, 38, 1), rgba(243, 93, 93, .85));
+    transition: width ease-in-out .25s;
+    border-radius: 4px;
+}
+.registration-section .reg-type.active{
+    color: var(--dark-pink);
+    font-weight: 600;
+}
+.registration-section .reg-type.active:after {
+    width: 100%;
+}
+
+
+.registration-section .reg-type:not(.active):hover{
+    cursor: pointer;
+    color: var(--main-pink);
+}
+
+form.reg-form{
+    padding: 1.5rem 0;
+}
+
+.form-sections {
+    margin: 1rem 0;
+}
+
+.form-sections .form-section{
+    overflow-y: hidden;
+    transition: ease-in-out .35s;
+}
+
+.form-sections .form-section.disabled{
+    opacity: .4;
+}
+
+.form-sections .form-section:not(.open) {
+    height: var(--closed-height);
+}
+
+.form-sections .form-section.open {
+    height: var(--open-height);
+}
+
+.form-sections .form-section:not(:last-child) {
+    border-bottom: 1px solid var(--light-pink);
+}
+
+.form-sections .form-section .section-header {
+    padding: .9rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: ease-in-out .25s;
+}
+.form-sections .form-section:not(.disabled) .section-header:hover{
+    cursor: pointer;
+    opacity: .7;
+}
+
+
+.form-sections .form-section .section-header .label {
+    color: var(--dark-pink);
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+.form-sections .form-section .section-header .toggle-icon{
+    width: 16px;
+    height: 16px;
+    display: block;
+    transition: ease-in-out .25s;
+}
+
+.form-sections .form-section.open .toggle-icon{
+    transform: rotate(180deg);
+}
+
+.form-sections .form-section .section-body {
+    padding: 1.5rem 1rem;
+    border: 1px solid var(--light-pink);
+}
+
+
+.membership-list{
+    display: flex;
+    justify-content: space-between;
+}
+
+.membership-list .membership-item{
+    width: calc(33% - .5rem);
+}
+
+.membership-item .membership-name{
+    transition: ease-in-out .25s;
+}
+.membership-item.selected .membership-name{
+    color: var(--dark-pink);
+}
+
+.price-section .price-item {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    background: transparent;
+    color: var(--main-pink);
+    width: 90px;
+    height: 75px;
+    border-radius: 8px;
+    margin: 0 auto;
+    border: 1px solid var(--main-pink);
+    transition: ease-in-out .25s;
+}
+
+.price-section .price-item:hover{
+    cursor: pointer;
+    opacity: .7;
+}
+
+
+.membership-item.selected .price-section .price-item {
+    background: var(--main-pink);
+    color: var(--white)
+}
+.price-section .price-item .price-icon {
+    width: 13px;
+    height: 13px;
+    opacity: .6;
+    margin-top: 10px;
+    display: block;
+    filter: brightness(0) saturate(100%) invert(43%) sepia(32%) saturate(2162%) hue-rotate(323deg) brightness(110%) contrast(90%);
+}
+
+.membership-item.selected .price-section .price-item .price-icon {
+    filter: brightness(0) saturate(100%) invert(99%) sepia(99%) saturate(0%) hue-rotate(129deg) brightness(103%) contrast(100%);
+}
+
+.price-section .price-item .price-label{
+    font-size: .85rem;
+}
+
+
+.price-section .price-item .price-value {
+    font-size: 2rem;
+    font-weight: 700;
+    display: block;
+}
+
+.input-section label {
+    font-size: .95rem;
+    color: var(--dark-pink);
+    margin-bottom: .25rem;
+    display: block;
+    font-weight: 600;
+    padding-left: 1.45rem;
+}
+
+.input-section .error-text{
+    display: block;
+    padding-left: 1.45rem;
+    padding-top: .25rem;
+}
+
+ul.password-requirements{
+    list-style: none;
+    padding-top: .5rem;
+    padding-left: 1.5rem;
+}
+
+.password-requirements li{
+    display: flex;
+    align-items: center;
+    transition: ease-in-out .25s;
+}
+
+.password-requirements li:not(:last-child){
+    margin-bottom: .25rem;
+}
+.password-requirements li.passed-test {
+    color: #53b153;
+}
+
+.password-requirements li.passed-test .dot{
+    display: none;
+}
+.password-requirements li .checkmark-icon{
+    width: 12px;
+    height: 12px;
+    display: block;
+    margin-top: -12px;
+    margin-right: .25rem;
+    filter: brightness(0) saturate(100%) invert(59%) sepia(55%) saturate(452%) hue-rotate(71deg) brightness(91%) contrast(91%);
+}
+.password-requirements li:not(.passed-test) .checkmark-icon{
+    display: none;
+}
+
+.password-requirements li .dot{
+    display: block;
+    width: 4px;
+    height: 4px;
+    background: var(--dark-pink);
+    border-radius: 50%;
+    margin-right: .25rem;
+    flex: 0 0 auto;
+}
+
+.discount-input input{
+    width: calc(100% - 90px);
+    border-radius: 12px 0 0 12px;
+    align-self: stretch;
+}
+
+.discount-input button{
+    width: 90px;
+    border-radius: 0 12px 12px 0;
+    align-self: stretch;
+}
+.discount-input button:disabled{
+    background: #333333;
+    color: var(--white);
+    opacity: .5;
+}

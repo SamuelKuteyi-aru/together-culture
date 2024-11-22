@@ -12,35 +12,39 @@ public class MembershipSeed
 
             if (context.Membership.Any())
             {
-                System.Console.WriteLine("There are missing membership records.");
+               // System.Console.WriteLine("There are missing membership records.");
                 return;
             }
             
-            System.Console.WriteLine("Seeding data");
+            //System.Console.WriteLine("Seeding data");
             context.Membership.AddRange(
                 new Membership
                 {
                     MonthlyPrice = 0,
                     JoiningFee = 0,
-                    MembershipType = Membership.MembershipEnum.Guest
+                    MembershipType = Membership.MembershipEnum.Guest,
+                    Name= "Guest"
                 },
                 new Membership
                 {
                     MonthlyPrice = 18.50,
                     JoiningFee = 0,
-                    MembershipType = Membership.MembershipEnum.Community
+                    MembershipType = Membership.MembershipEnum.Community,
+                    Name= "Community"
                 },
                 new Membership
                 {
                     MonthlyPrice = 45,
                     JoiningFee = 70,
-                    MembershipType = Membership.MembershipEnum.KeyAccess
+                    MembershipType = Membership.MembershipEnum.KeyAccess,
+                    Name= "Key Access"
                 },
                 new Membership
                 {
                     MonthlyPrice = 70,
                     JoiningFee = 100,
-                    MembershipType = Membership.MembershipEnum.CreativeWorkspace
+                    MembershipType = Membership.MembershipEnum.CreativeWorkspace,
+                    Name= "Creative Workspace"
                 }
             );
             context.SaveChanges();

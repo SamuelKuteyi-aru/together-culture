@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/css/main.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/together-culture-cambridge.styles.css" asp-append-version="true"/>
-    
+    <link rel="stylesheet" href="~/css/register-styles.css" asp-append-version="true"/>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
 </head>
 <body>
 
@@ -36,8 +38,8 @@
             </ul>
             
             <div class="auth-links d-flex align-items-center justify-content-center">
-                <a asp-area="" asp-controller="Auth" asp-action="Login" class="button login-btn mx-2">Log in</a>
-                <a asp-area="" asp-controller="Auth" asp-action="Register" class="button button-secondary register-btn">Register</a>
+                <a asp-area="" asp-controller="EndUser" asp-action="Login" class="button login-btn mx-2">Log in</a>
+                <a asp-area="" asp-controller="EndUser" asp-action="Register" class="button button-secondary register-btn">Register</a>
             </div>
         </div>
     </div>
@@ -132,9 +134,9 @@
         &copy; 2024 - together_culture_cambridge - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
     </div>
 </footer>-->
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
 @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

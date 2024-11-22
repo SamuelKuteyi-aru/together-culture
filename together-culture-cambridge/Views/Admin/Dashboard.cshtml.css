@@ -1,0 +1,71 @@
+.header-section{
+    max-width: 500px;
+    padding: 1.2rem 0;
+    margin: 0 auto;
+}
+
+.user-welcome{
+    font-size: 1.5rem;
+    
+    
+}
+
+.user-welcome .prepend{
+    opacity: .8;
+    color: var(--bs-gray);
+    font-weight: 500;
+}
+
+.user-welcome .user-name{
+    font-weight: 600;
+}
+
+
+.header-section .header-text{
+    padding: .5rem 0 1.2rem;
+    opacity: .8;
+    max-width: 280px;
+    text-align: center;
+    font-size: 1.05rem;
+}
+
+
+.user-list-section{
+    margin: 1.2rem 0;
+}
+.search-section{
+    max-width: 450px;
+    margin: .5rem auto;
+}
+
+.search-box{
+    position: relative;
+}
+
+
+.user-grid{
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-gap: 1rem .5rem;
+}
+
+.loading-section,
+.load-error-section{
+    display: flex;
+}
+
+.loading-section .spinner + span{
+    margin-left: .5rem;
+    color: var(--dark-pink);
+}
+
+.load-error-section{
+    color: var(--red);
+    background: transparent;
+    border: 1px solid transparent;
+}
+
+
+.load-error-section img + span{
+    margin-left: .5rem;
+}

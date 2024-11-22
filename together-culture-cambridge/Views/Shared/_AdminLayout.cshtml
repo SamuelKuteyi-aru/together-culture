@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <title>@ViewData["Title"] - Together Culture Cambridge</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/main.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/together-culture-cambridge.styles.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/main-layout.css" asp-append-version="true"/>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+</head>
+<body class="body-neutral">
+<div class="layout-load-section process-section">
+    <div class="d-flex align-items-center">
+        <div class="spinner alt-spinner"></div>
+        <span>Loading admin account..</span>
+    </div>
+</div>
+
+<div class="layout-load-section error-section d-none">
+    <div class="d-flex align-items-center">
+        <img src="~/icons/icon-exclamation.svg" 
+             alt="error exclamation"
+        />
+        
+        <span class="load-text">Error loading admin account</span>
+    </div>
+</div>
+<main class="main-container d-none">
+    <nav class="d-flex flex-column">
+        <a asp-area="" asp-controller="Admin" asp-action="Dashboard">
+            <img alt="together culture"
+                 class="tc-logo"
+                 src="~/images/tc-logo.png"/>
+        </a>
+
+        <ul class="nav-list">
+            <li>
+                <a asp-area="" asp-controller="Admin" asp-action="Dashboard">
+                    <img alt="dashboard" src="~/icons/radix-icons_dashboard.svg"/>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+        </ul>
+        <a href="javascript:void(0)" class="signout-link">
+            <img alt="sign out" src="~/icons/sign-out-icon.svg"/>
+            <span>Sign out</span>
+        </a>
+    </nav>
+    <section class="main">
+        <div class="main-header mb-4">
+            <div class="breadcrumb mb-0">
+                <div class="breadcrumb-item main">Admin</div>
+                <span class="separator">/</span>
+                <a href="javascript:void(0)" class="breadcrumb-item sub">
+                </a>
+            </div>
+
+            <div class="user-section">
+                <div class="user-icon">
+                    <img alt="user" src="~/icons/user-icon.svg"/>
+                </div>
+
+                <span class="user-name">Ayodeji 0.</span>
+            </div>
+        </div>
+        <div class="main-body">
+            @RenderBody()
+        </div>
+    </section>
+</main>
+
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/admin.js" async defer></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

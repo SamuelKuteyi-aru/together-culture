@@ -1,0 +1,25 @@
+<div class="input-section">
+    <div class="input-item">
+        <label class="d-block w-100 opacity-80 mb-2 px-3 text-center">
+            Please enter the 6-digit code that was sent to your email address.
+            Check your spam folder if you cannot find the email in your inbox.
+            This code expires in 30 minutes.
+        </label>
+        <div class="input-container">
+            <input
+                placeholder="Enter verification code"
+                type="text"
+                name="verificationCode"
+                class="base-input text-center"/>
+
+            <span class="error-text d-block text-center"></span>
+            <button class="resend-btn code-resend-btn">Resend code</button>
+            <div class="resend-section button-container d-block mx-auto position-relative">
+                <button class="button button-secondary next-step-btn verify-btn mt-2">
+                    Proceed
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>
