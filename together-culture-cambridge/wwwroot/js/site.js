@@ -33,3 +33,16 @@ const generateHeaders = () => {
 
     return headers;
 }
+
+const debounce = (fn, wait, immediate = false) => {
+    let timer;
+    return function (...args) {
+        const callNow = immediate && !timer;
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            timer = null;
+            if (!immediate) fn.apply(this, args);
+        }, wait);
+        if (callNow) fn.apply(this, args);
+    };
+};

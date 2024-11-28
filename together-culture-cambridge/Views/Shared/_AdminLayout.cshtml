@@ -8,8 +8,11 @@
     <link rel="stylesheet" href="~/css/main.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/together-culture-cambridge.styles.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/css/main-layout.css" asp-append-version="true"/>
+    
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    
 </head>
 <body class="body-neutral">
 <div class="layout-load-section process-section">
@@ -41,6 +44,12 @@
                 <a asp-area="" asp-controller="Admin" asp-action="Dashboard">
                     <img alt="dashboard" src="~/icons/radix-icons_dashboard.svg"/>
                     <span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a asp-area="" asp-controller="Admin" asp-action="Events">
+                    <img alt="dashboard" src="~/icons/calendar-week.svg"/>
+                    <span>Events</span>
                 </a>
             </li>
         </ul>

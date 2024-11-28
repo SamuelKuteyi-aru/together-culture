@@ -1,0 +1,31 @@
+<div class="event-list-section py-2 mx-5">
+    <div class="search-section">
+        <div class="search-box">
+            <img src="~/icons/search-icon.svg"
+                 alt="search for events"
+                 class="search-icon "
+            />
+            <input
+                class="base-input"
+                id="accountSearch"
+                type="text"
+                placeholder="Search for events"/>
+        </div>
+    </div>
+
+    <div class="loading-section  py-5 align-items-center justify-content-center">
+        <div class="spinner alt-spinner mr-2"></div>
+        <span>Loading events....</span>
+    </div>
+
+    <div class="load-error-section error-section align-items-center justify-content-center py-5 d-none">
+        <img src="~/icons/icon-exclamation.svg"
+             alt="error exclamation"
+        />
+
+        <span class="load-text">Error loading events</span>
+    </div>
+    <div class="event-grid py-5">
+
+    </div>
+</div>

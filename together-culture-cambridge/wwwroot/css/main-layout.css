@@ -37,7 +37,7 @@
 
 
 .main-container nav ul.nav-list li:not(:last-child) {
-    margin-bottom: .25rem;
+    margin-bottom: .5rem;
 }
 
 .main-container nav ul.nav-list li a{
@@ -233,4 +233,25 @@ section.main .main-header{
 .grid-item.transition{
     opacity: 0;
     transform: translateX(-40px);
+}
+
+.modal .modal-element .modal-body .form-fields{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.modal .modal-element .modal-body .form-fields .field-item{
+    width: 100%;
+    flex: 0 0 auto;
+    margin-bottom: 1rem;
+}
+
+.modal .modal-element .modal-body .form-fields .field-item.half-width{
+    width: calc(50% - .75rem);
+}
+.modal .modal-element .modal-body .form-fields  .field-item label{
+    font-weight: 500;
+    font-size: .9rem;
+    margin-bottom: .25rem;
 }

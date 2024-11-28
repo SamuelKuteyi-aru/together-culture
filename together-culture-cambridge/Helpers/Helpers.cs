@@ -90,4 +90,31 @@ public class Methods
 
         return cookieOptions;
     }
+    
+    public  static bool FilterUser(
+        EndUser user, 
+        bool passedUnapprovedQuery, 
+        bool unapproved,
+        string query
+    )
+    {
+        if (user.Email != null && user.Email.Contains(query))
+        {
+            if (passedUnapprovedQuery) return user.Approved == !unapproved;
+            return true;
+        }
+                
+        var firstName = String.IsNullOrEmpty(user.FirstName) ? "" : user.FirstName;
+        var lastName = String.IsNullOrEmpty(user.LastName) ? "" : user.LastName;
+        var userName = firstName + lastName;
+
+        if (userName.Contains(query))
+        {
+            if (passedUnapprovedQuery) return user.Approved == !unapproved;
+            return true;
+        }
+
+
+        return false;
+    }
 }

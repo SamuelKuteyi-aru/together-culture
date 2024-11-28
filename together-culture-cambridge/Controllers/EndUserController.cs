@@ -45,7 +45,8 @@ namespace together_culture_cambridge.Controllers
             var guestMembership = await _context.Membership
                 .Where(m => m.MembershipType == Enum.Parse<Membership.MembershipEnum>("Guest")).FirstOrDefaultAsync();
             Console.WriteLine("Guest membership: {0}", guestMembership?.Id);
-            var userList = await _context.EndUser.Where(user => !user.Approved && (guestMembership != null && user.MembershipId != guestMembership.Id)).ToListAsync();
+            var userList = await _context.EndUser.Where(user => !user.Approved && (guestMembership != null && user.MembershipId != guestMembership.Id))
+                .ToListAsync();
 
             JsonArray users = new JsonArray();
             foreach (var endUser in userList)
@@ -61,6 +62,109 @@ namespace together_culture_cambridge.Controllers
 
             return Ok(users);
 
+        }
+
+        [Route("EndUser/Search")]
+        public async Task<IActionResult> AccountSearch()
+        {
+            int adminId = Methods.ReadAdminCookie(Request);
+            if (adminId == -1)
+            {
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Json(new { message = "Unauthorized request" });
+            }
+
+            if (!Request.Query.Keys.Contains("query"))
+            {
+                Response.StatusCode = StatusCodes.Status400BadRequest;
+                return Json(new { message = "Query parameter is required" });
+            }
+
+            var query = Request.Query["query"].ToString();
+
+            bool passedApprovedQuery = Request.Query.Keys.Contains("approved");
+            bool approved = true;
+            if (passedApprovedQuery)
+            {
+                var approvedQuery = Request.Query["approved"].ToString();
+                approved = String.IsNullOrEmpty(approvedQuery) ? true : bool.Parse(approvedQuery);
+            }
+            
+            bool hasMembershipQuery = Request.Query.Keys.Contains("hasMembership");
+            bool hasMembership = true;
+
+            if (hasMembershipQuery)
+            {
+                var membershipQuery = Request.Query["hasMembership"].ToString();
+                hasMembership = String.IsNullOrEmpty(membershipQuery) ? true : bool.Parse(membershipQuery);
+            }
+
+
+
+
+
+            var userList = await _context.EndUser.Where(user =>
+                (
+                    (user.Email != null && user.Email.Contains(query))
+                    || (
+                        user.FirstName != null && 
+                        (
+                            query.Length > user.FirstName.Length ? 
+                                query.Contains(user.FirstName) : 
+                                user.FirstName.Contains(query)
+                        ))
+                    || (user.LastName != null && (
+                        query.Length > user.LastName.Length ? 
+                            query.Contains(user.LastName)
+                            : user.LastName.Contains(query)
+                        )
+                    )
+                )
+            ).ToListAsync();
+            Console.WriteLine("Query is {0}, Approved: {1}", query, approved);
+            JsonArray users = new JsonArray();
+
+            var guestMembership = await _context.Membership
+                .Where(m => m.MembershipType == Enum.Parse<Membership.MembershipEnum>("Guest")).FirstOrDefaultAsync();
+            
+            
+            
+            foreach (var endUser in userList)
+            {
+                var membership = await _context.Membership.Where(membership => membership.Id == endUser.MembershipId).FirstOrDefaultAsync();
+                if (membership != null)
+                {
+                    endUser.Membership = membership;
+                }
+
+                bool passUser = true;
+                if (hasMembershipQuery)
+                {
+                    if (guestMembership != null && passUser)
+                    {
+                        passUser = hasMembership
+                            ? endUser.MembershipId != guestMembership.Id
+                            : endUser.MembershipId == guestMembership.Id;
+                        
+                        Console.WriteLine("Membership: {0}, Guest Membership: {1}, Has Membership: {2}", endUser.MembershipId, guestMembership.Id, hasMembership);
+                    }
+                }
+
+                if (passedApprovedQuery)
+                {
+                    if (endUser.Approved != approved && passUser)
+                    {
+                        passUser = false;
+                    }
+                }
+
+                if (passUser)
+                {
+                    users.Add(Methods.PublicFacingUser(endUser).Value);
+                }
+            }
+
+            return Ok(users);
         }
 
         [Route("EndUser/Login")]
