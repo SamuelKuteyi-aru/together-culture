@@ -1,5 +1,8 @@
+using System.Text.Json.Nodes;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
+using Org.BouncyCastle.Pqc.Crypto.Lms;
+using together_culture_cambridge.Data;
 using together_culture_cambridge.Models;
 
 namespace together_culture_cambridge.Helpers;
@@ -29,7 +32,6 @@ public class Methods
     {
         EndUser.GenderEnum genderValue = endUser.Gender;
         var membership = endUser.Membership;
-        Console.WriteLine("Membership: {0}", membership);
         object? membershipData = null;
         if (membership != null)
         {
@@ -116,5 +118,37 @@ public class Methods
 
 
         return false;
+    }
+
+    public static JsonResult CreateEventItem(Event @event, ApplicationDatabaseContext context)
+    {
+        var bookingList = context.EventBooking.Where(x => x.EventId == @event.Id).ToList();
+        return new JsonResult(new
+        {
+            id = @event.Id,
+            name = @event.Name,
+            address = @event.Address,
+            description = @event.Description,
+            totalSpaces = @event.TotalSpaces,
+            ticketPrice = @event.TicketPrice,
+            startTime = @event.StartTime,
+            endTime = @event.EndTime,
+            createdAt = @event.CreatedAt,
+            bookedSpaces = bookingList.Count,
+        });
+    }
+
+    public static JsonArray CreateEventList(List<Event> events, ApplicationDatabaseContext context)
+    {
+        JsonArray eventArray = new JsonArray();
+
+        Console.WriteLine("Fetched events");
+        foreach (var @event in events)
+        {
+            var result = CreateEventItem(@event, context);
+            eventArray.Add(result.Value);
+        }
+
+        return eventArray;
     }
 }

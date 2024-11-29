@@ -31,5 +31,5 @@
 .event-grid{
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    grid-gap: 1rem .5rem;
+    grid-gap: 1rem 1.2rem;
 }

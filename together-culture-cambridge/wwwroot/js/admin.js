@@ -91,9 +91,10 @@ const createEventFields = () => {
              ${
                 field.type === "textarea" ? `
                         <textarea 
+                          
                             class="base-input"
                             placeholder="${ field.placeholder }" 
-                            name="${ field.name }"></textarea>
+                            name="${ field.name }">${ field.value }</textarea>
                      ` : field.type === "text" ? `<input
                             name="${field.name}"
                             type="${field.type}"
@@ -206,11 +207,11 @@ const createUserList = () => {
         let date= new Date(user.createdAt).toDateString();
         userGrid.append(`
         <div class="grid-item">
-            <div class="user-img-icon">
+            <div class="img-icon">
                 <img alt="user" src="/icons/user-icon.svg"/>
             </div>
             
-            <div class="user-name my-2">${user.firstName } ${ user.lastName }</div>
+            <div class="name my-2">${user.firstName } ${ user.lastName }</div>
             <div class="user-email">${ user.email }</div>
             <div class="user-phone mt-1">${ user.phone }</div>
             
@@ -252,7 +253,6 @@ const getUnapprovedAccounts = (query = "") => {
         if (list.length === 0) {
             addEmptyListSection(!!query)
         }
-        console.log("Response:", list);
         createUserList();
     }).catch(err => {
         console.log("Load error:", err)
@@ -278,6 +278,45 @@ const addEmptyListSection = (passedQuery = false) => {
                 ${ !passedQuery ? "There are currently no unapproved users." : "No unapproved users found." }
             </div>`
         )
+}
+
+const createEventModal = (eventIndex = null) => {
+    let update = eventIndex != null;
+    
+    let modal = $(".modal.event-create-modal");
+    modal.remove();
+    let modalBody = `
+            <div class="modal event-create-modal">
+               <div class="modal-element">
+                    <div class="modal-header">
+                        <h3>${ update ? "Edit" : "Create" } Event</h3>
+                        <box-icon class="close-icon" name="x"></box-icon>
+                    </div>
+                     
+                     <form method="post">
+                        <div class="modal-body">
+                        <div class="form-fields">
+                          ${ createEventFields() }
+                        </div>
+                     </div>
+                    
+                      <div class="modal-footer d-flex justify-content-center">
+                        <button data-index="${ update ? eventIndex : -1 }" class="button button-secondary create-action-btn">
+                            ${ update ? "Edit" : "Create" } Event
+                        </button>
+                      </div>
+                    </form>
+                </div>
+            </div>
+        `
+
+    $("body").append(modalBody);
+    setTimeout(function () {
+        let modal = $(".modal.event-create-modal");
+        modal.addClass("in-view");
+        
+        console.log("Events:", eventList)
+    }, 0)
 }
 $(document).ready(function () {
     let href = window.location.href;
@@ -361,41 +400,7 @@ $(document).ready(function () {
         getUnapprovedAccounts(event.target.value)
     }, 1000))
     
-    const createModal = () => {
-
-        let modal = $(".modal.event-create-modal");
-        modal.remove();
-        let modalBody = `
-            <div class="modal event-create-modal">
-               <div class="modal-element">
-                    <div class="modal-header">
-                        <h3>Create Event</h3>
-                        <box-icon class="close-icon" name="x"></box-icon>
-                    </div>
-                     
-                     <form method="post">
-                        <div class="modal-body">
-                        <div class="form-fields">
-                          ${ createEventFields() }
-                        </div>
-                     </div>
-                    
-                      <div class="modal-footer d-flex justify-content-center">
-                        <button class="button button-secondary create-action-btn">
-                            Create Event
-                        </button>
-                      </div>
-                    </form>
-                </div>
-            </div>
-        `
-
-        $("body").append(modalBody);
-        setTimeout(function () {
-            let modal = $(".modal.event-create-modal");
-            modal.addClass("in-view");
-        }, 0)
-    }
+    
     
     const closeModal = () => {
         let modal = $(".modal.event-create-modal");
@@ -411,7 +416,7 @@ $(document).ready(function () {
         }, 350)
     }
     
-    const createEvent = async () => {
+    const createRequestBody = () => {
         let data = {};
         eventFields.forEach(field => {
             data = {
@@ -420,6 +425,10 @@ $(document).ready(function () {
             }
         })
         
+        return data
+    }
+    const createEvent = async () => {
+        let data = createRequestBody();
         let response = await fetch(`/Event/Create`, {
             method: "POST",
             headers: {
@@ -441,7 +450,7 @@ $(document).ready(function () {
         event.preventDefault();
         console.log("Clicked")
         
-        createModal();
+        createEventModal();
     })
     
     $(document).on("input", ".event-create-modal .base-input", function (event) {
@@ -534,6 +543,22 @@ $(document).ready(function () {
             return field.hasError;
         })
         
+        const updateEvent = async (id) => {
+            let response = await fetch(`/Event/${id}`, {
+                method: "PUT",
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify(createRequestBody())
+            })
+            
+            if (!response.ok) {
+                throw new Error(response.statusText);
+            }
+            return await response.json();
+        }
         const resetButton = () => {
             $(this).removeClass("button-error");
             $(this).removeClass("button-success");
@@ -545,15 +570,26 @@ $(document).ready(function () {
         }
         
         if (fieldsWithError.length === 0) {
+            let index = parseInt($(this).attr("data-index"));
+            console.log({ index })
             $(this).attr("disabled", "disabled");
-            $(this).text("Creating event...")
+            $(this).text(`${index === -1 ? 'Creating' : 'Updating'} event...`)
             
-            createEvent().then(event => {
+           
+            let event = eventList[index];
+            console.log("Event:", event);
+            let request = index === -1 ? createEvent() : updateEvent(event.id);
+            
+            request.then(event => {
                 
-                console.log({ event })
+                console.log("Event:", { event });
                 $(this).removeClass("button-secondary");
                 $(this).addClass("button-success");
-                $(this).text("Event Created!")
+                $(this).text(`Event ${ index === -1 ? 'Created' : 'Updated' }!`)
+                
+                eventList[index] = event;
+                createEventList();
+                
                 
                 setTimeout(() => {
                     resetButton();
@@ -564,7 +600,7 @@ $(document).ready(function () {
                 console.log({ errorMessage: message })
                 $(this).removeClass("button-secondary");
                 $(this).addClass("button-error");
-                $(this).text("Error creating event");
+                $(this).text(`Error ${ index === -1 ? 'creating' : 'updating' } event`);
                 
                 setTimeout(() => {
                     resetButton();
@@ -574,3 +610,5 @@ $(document).ready(function () {
         }
     })
 })
+
+

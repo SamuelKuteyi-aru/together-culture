@@ -80,7 +80,7 @@ namespace together_culture_cambridge.Controllers
                 return Json(new { message = "Query parameter is required" });
             }
 
-            var query = Request.Query["query"].ToString();
+            var query = Request.Query["query"].ToString().ToLower();
 
             bool passedApprovedQuery = Request.Query.Keys.Contains("approved");
             bool approved = true;
@@ -110,13 +110,13 @@ namespace together_culture_cambridge.Controllers
                         user.FirstName != null && 
                         (
                             query.Length > user.FirstName.Length ? 
-                                query.Contains(user.FirstName) : 
-                                user.FirstName.Contains(query)
+                                query.Contains(user.FirstName.ToLower()) : 
+                                user.FirstName.ToLower().Contains(query)
                         ))
                     || (user.LastName != null && (
-                        query.Length > user.LastName.Length ? 
-                            query.Contains(user.LastName)
-                            : user.LastName.Contains(query)
+                        query.Length > user.LastName.ToLower().Length ? 
+                            query.Contains(user.LastName.ToLower())
+                            : user.LastName.ToLower().Contains(query)
                         )
                     )
                 )
@@ -467,8 +467,6 @@ namespace together_culture_cambridge.Controllers
                             existingUser.UpdatedAt = DateTime.Now;
                             existingUser.Approved = false;
                             existingUser.Password = endUser.Password;
-                            Console.WriteLine("Membership ID: {0}", endUser.MembershipId);
-                            Console.WriteLine("Updating existing user");
                             
                             await _context.SaveChangesAsync();
                             

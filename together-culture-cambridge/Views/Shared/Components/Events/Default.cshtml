@@ -1,4 +1,4 @@
-<div class="event-list-section py-2 mx-5">
+<div class="event-list-section py-2 my-5">
     <div class="search-section">
         <div class="search-box">
             <img src="~/icons/search-icon.svg"
@@ -7,7 +7,7 @@
             />
             <input
                 class="base-input"
-                id="accountSearch"
+                id="eventSearch"
                 type="text"
                 placeholder="Search for events"/>
         </div>
@@ -25,7 +25,9 @@
 
         <span class="load-text">Error loading events</span>
     </div>
-    <div class="event-grid py-5">
+    <div class="event-grid data-grid py-5">
 
     </div>
 </div>
+
+<script src="~/js/events.js" async defer></script>
