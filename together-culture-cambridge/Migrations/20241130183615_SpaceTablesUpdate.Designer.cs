@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using together_culture_cambridge.Data;
 
@@ -11,9 +12,11 @@ using together_culture_cambridge.Data;
 namespace together_culture_cambridge.Migrations
 {
     [DbContext(typeof(ApplicationDatabaseContext))]
-    partial class ApplicationDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20241130183615_SpaceTablesUpdate")]
+    partial class SpaceTablesUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -280,9 +283,6 @@ namespace together_culture_cambridge.Migrations
                     b.Property<DateTime>("ClosingTime")
                         .HasColumnType("datetime");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime");
-
                     b.Property<int>("MinimumAccessLevel")
                         .HasColumnType("int");
 
@@ -296,9 +296,6 @@ namespace together_culture_cambridge.Migrations
 
                     b.Property<int>("TotalSeats")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime");
 
                     b.HasKey("Id");
 

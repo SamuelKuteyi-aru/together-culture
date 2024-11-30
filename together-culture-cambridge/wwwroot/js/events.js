@@ -40,11 +40,6 @@ let userType = path[0];
 const createEventList = () => {
     let gridSection = $(".event-list-section .event-grid");
     gridSection.html("");
-    
-    console.log({ 
-        location: window.location
-    })
-    
 
         
     
@@ -163,21 +158,24 @@ const getEvents = (query = "") => {
 $(document).ready(function () {
     getEvents();
     $(".event-list-section #eventSearch").on("input",debounce(function (event) {
-        console.log("Input changed:", event.target.value)
         let query = event.target.value
         getEvents(query);
     }, 1000))
     $(document).on("click", ".event-grid .event-edit-btn", function (event) {
         let index = $(".event-grid .event-edit-btn").index(this);
+        console.log("Clicked")
        
         if (userType === "Admin") {
             console.log("Index", index);
            
             let event = eventList[index];
+            console.log({ event })
             
             eventFields = eventFields.map(field => {
                 let value = event[field.name]
+               
                 field.value = value ? value : "";
+                
                 return field
             })
 

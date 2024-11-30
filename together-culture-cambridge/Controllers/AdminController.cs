@@ -82,6 +82,11 @@ namespace together_culture_cambridge.Controllers
             return View();
         }
 
+        public IActionResult Spaces()
+        {
+            return View();
+        }
+
         [HttpPost]
         [Route("Admin/Approve/{userId}")]
         public async Task<IActionResult> Approve(int userId)

@@ -45,19 +45,23 @@ namespace together_culture_cambridge.Controllers
             var guestMembership = await _context.Membership
                 .Where(m => m.MembershipType == Enum.Parse<Membership.MembershipEnum>("Guest")).FirstOrDefaultAsync();
             Console.WriteLine("Guest membership: {0}", guestMembership?.Id);
-            var userList = await _context.EndUser.Where(user => !user.Approved && (guestMembership != null && user.MembershipId != guestMembership.Id))
+            var userList = await _context.EndUser
+                .Where(user => !user.Approved && (guestMembership != null && user.MembershipId != guestMembership.Id))
+                .Join(
+                    _context.Membership,
+                    endUser => endUser.MembershipId,
+                    membership => membership.Id,
+                    (endUser, membership) => 
+                        new {endUser, membership}
+                )
                 .ToListAsync();
 
             JsonArray users = new JsonArray();
-            foreach (var endUser in userList)
+            foreach (var user in userList)
             {
-                var membership = await _context.Membership.Where(membership => membership.Id == endUser.MembershipId).FirstOrDefaultAsync();
-                if (membership != null)
-                {
-                    endUser.Membership = membership;
-                }
 
-                users.Add(Methods.PublicFacingUser(endUser).Value);
+                user.endUser.Membership = user.membership;
+                users.Add(Methods.PublicFacingUser(user.endUser).Value);
             }
 
             return Ok(users);

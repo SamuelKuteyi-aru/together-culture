@@ -78,18 +78,114 @@ let eventFields = [
     }
 ]
 
+let spaceFields = [
+    {
+        label: "Room ID",
+        name: "roomId",
+        type: "text",
+        value: "",
+        placeholder: "Example: SC105",
+        hasError: false,
+        errorText: "",
+        isRequired: true,
+        halfWidth: true
+    },
+    {
+        label: "Total Seats Available",
+        name: "totalSeats",
+        type: "text",
+        value: "",
+        placeholder: "Seats available in space",
+        hasError: false,
+        errorText: "",
+        isRequired: true,
+        halfWidth: true
+    },
+    {
+        label: "Minimum membership level required",
+        name: "minimumAccessLevel",
+        type: "select",
+        value: "Community",
+        options: [
+            { label: "Community", value: "Community" },
+            { label: "Key Access", value: "KeyAccess" },
+            { label: "Creative Workspace", value: "CreativeWorkspace" },
+        ],
+        placeholder: "Minimum membership required to access the space",
+        hasError: false,
+        errorText: "",
+        isRequired: true,
+        halfWidth: false
+    },
+    {
+        label: "Opening Time",
+        name: "openingTime",
+        type: "time",
+        value: "",
+        placeholder: "Space opening time",
+        hasError: false,
+        errorText: "",
+        isRequired: true,
+        halfWidth: true
+    },
+    {
+        label: "Closing Time",
+        name: "closingTime",
+        type: "time",
+        value: "",
+        placeholder: "Space closing time",
+        hasError: false,
+        errorText: "",
+        isRequired: true,
+        halfWidth: true
+    }
+]
 
-const createEventFields = () => {
+const getFieldsWithErrors = (fieldArray) => {
+    $(".create-action-modal .base-input").removeClass("with-error");
+    $(".create-action-modal .field-item .error-text").text("");
+
+    let fieldItems = document.querySelectorAll(".create-action-modal .base-input");
+    let errorFields = document.querySelectorAll(".create-action-modal .field-item .error-text")
+    return fieldArray.filter((field, index) => {
+        if (field.isRequired && !field.value) {
+            fieldItems[index].classList.add("with-error");
+            errorFields[index].innerText = "This field is required.";
+            return true;
+        }
+
+        if (field.hasError) {
+            fieldItems[index].classList.add("with-error");
+            errorFields[index].innerText = field.errorText;
+        }
+        return field.hasError;
+    })
+}
+
+
+const createOptionList = (field) => {
+    let options = ''
+    field.options.forEach((option) => {
+        let optionElement = document.createElement("option");
+        optionElement.selected = option.value === field.value;
+        optionElement.innerText = option.label;
+        optionElement.value = option.value;
+        options += optionElement.outerHTML;
+    })
+    
+    return options;
+}
+const createFieldElements = (array) => {
     let fieldElement = "";
     let date = new Date();
     let minDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}T${date.getHours()}:${date.getMinutes()}`;
-    
-    eventFields.forEach(field => {
+
+    array.forEach(field => {
         let fieldItem  = `<div class="field-item${ field.halfWidth ? ' half-width': ''}">
             <label>${ field.label }</label>
             <div class="field-container">
              ${
-                field.type === "textarea" ? `
+            field.type === "textarea" ? `
                         <textarea 
                           
                             class="base-input"
@@ -101,7 +197,12 @@ const createEventFields = () => {
                             value="${field.value}"
                             placeholder="${ field.placeholder }"
                             class="base-input"
-                        />` : `<input
+                        />` : field.type === 'select' ?
+                            `
+                                <select class="base-input" name="${ field.name }">
+                                    ${ createOptionList(field) }
+                                </select>
+                            `: `<input
                             name="${field.name}"
                             type="${field.type}"
                             value="${field.value}"
@@ -113,11 +214,18 @@ const createEventFields = () => {
             </div>
             <span class="error-text">${ field.errorText }</span>
         </div>`
-        
+
         fieldElement += fieldItem;
     })
-    
+
     return fieldElement;
+}
+const createEventFields = () => {
+   return createFieldElements(eventFields)
+}
+
+const createSpaceFields = () => {
+    return createFieldElements(spaceFields)
 }
 const loadAdmin = async () => {
     let response = await fetch("/Admin", {
@@ -245,7 +353,7 @@ const getUnapprovedAccounts = (query = "") => {
         userLoadSection.addClass("d-none");
         userErrorSection.addClass("d-none");
         
-        
+        console.log({ list })
         userGrid.removeClass("d-none");
         usersList = [ ...list ];
         
@@ -280,29 +388,29 @@ const addEmptyListSection = (passedQuery = false) => {
         )
 }
 
-const createEventModal = (eventIndex = null) => {
-    let update = eventIndex != null;
-    
-    let modal = $(".modal.event-create-modal");
+const createActionModal = (index, type) => {
+    let update = index !== null;
+    let modal = $(`.modal.${type}-create-modal`);
+    let actionLabel = type === 'event' ? "Event" : "Space"
     modal.remove();
     let modalBody = `
-            <div class="modal event-create-modal">
+            <div class="modal create-action-modal ${type}-create-modal">
                <div class="modal-element">
                     <div class="modal-header">
-                        <h3>${ update ? "Edit" : "Create" } Event</h3>
+                        <h3>${ update ? "Edit" : "Create" } ${ actionLabel }</h3>
                         <box-icon class="close-icon" name="x"></box-icon>
                     </div>
                      
                      <form method="post">
                         <div class="modal-body">
                         <div class="form-fields">
-                          ${ createEventFields() }
+                          ${ type === 'event' ? createEventFields() : createSpaceFields() }
                         </div>
                      </div>
                     
                       <div class="modal-footer d-flex justify-content-center">
-                        <button data-index="${ update ? eventIndex : -1 }" class="button button-secondary create-action-btn">
-                            ${ update ? "Edit" : "Create" } Event
+                        <button data-index="${ update ? index : -1 }" class="button button-secondary create-action-btn ${type}-action-btn">
+                            ${ update ? "Edit" : "Create" } ${ actionLabel }
                         </button>
                       </div>
                     </form>
@@ -312,11 +420,16 @@ const createEventModal = (eventIndex = null) => {
 
     $("body").append(modalBody);
     setTimeout(function () {
-        let modal = $(".modal.event-create-modal");
+        let modal = $(`.modal.${type}-create-modal`);
         modal.addClass("in-view");
         
-        console.log("Events:", eventList)
     }, 0)
+}
+const createSpaceModal = (eventIndex = null) => {
+    createActionModal(eventIndex, "space")
+}
+const createEventModal = (eventIndex = null) => {
+    createActionModal(eventIndex, "event")
 }
 $(document).ready(function () {
     let href = window.location.href;
@@ -343,7 +456,13 @@ $(document).ready(function () {
             
             
            
-            getUnapprovedAccounts();
+            let path = window.location.pathname.slice(1).split(/\//g);
+            
+            if (path.length >= 2 && path[1] === 'Dashboard') {
+                console.log({ path })
+                getUnapprovedAccounts();
+            }
+           
         }).catch(error => {
             console.log("Error: ", error);
             loadSection.remove();
@@ -403,7 +522,7 @@ $(document).ready(function () {
     
     
     const closeModal = () => {
-        let modal = $(".modal.event-create-modal");
+        let modal = $(".modal.create-action-modal");
         modal.removeClass("in-view");
         
         eventFields = eventFields.map(field => {
@@ -416,9 +535,9 @@ $(document).ready(function () {
         }, 350)
     }
     
-    const createRequestBody = () => {
+    const createRequestBody = (array) => {
         let data = {};
-        eventFields.forEach(field => {
+        array.forEach(field => {
             data = {
                 ...data,
                 [field.name] : field.value,
@@ -427,8 +546,26 @@ $(document).ready(function () {
         
         return data
     }
+    const updateEvent = async (id) => {
+        let response = await fetch(`/Event/${id}`, {
+            method: "PUT",
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify(createRequestBody(eventFields))
+        })
+
+        if (!response.ok) {
+            throw new Error(response.statusText);
+        }
+        return await response.json();
+    }
+    
+    
     const createEvent = async () => {
-        let data = createRequestBody();
+        let data = createRequestBody(eventFields);
         let response = await fetch(`/Event/Create`, {
             method: "POST",
             headers: {
@@ -446,36 +583,81 @@ $(document).ready(function () {
         
         return await response.json();
     }
+    
+    const createSpace = async () => {
+        let data = createRequestBody(spaceFields);
+        let response = await fetch(`/Space/Create`, {
+            method: "POST",
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            credentials: "include",
+            body: JSON.stringify(data)
+        })
+
+        
+        if (!response.ok) {
+            throw new Error(response.statusText)
+        }
+
+        return await response.json();
+    }
+    
+    
+    const updateSpace = async (id) => {
+        let data = createRequestBody(spaceFields);
+        let response = await fetch(`/Space/${id}`, {
+            method: "PUT",
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify(data)
+        })
+
+        if (!response.ok) {
+            throw new Error(response.statusText);
+        }
+        return await response.json();
+    }
     $(document).on("click", ".event-create-btn", function (event) {
         event.preventDefault();
-        console.log("Clicked")
-        
         createEventModal();
     })
     
-    $(document).on("input", ".event-create-modal .base-input", function (event) {
+    $(document).on("click", ".space-create-btn", function (event) {
+        event.preventDefault();
+        createSpaceModal()
+    })
+    
+    $(document).on("input", ".create-action-modal .base-input", function (event) {
         let name = event.target.name;
         let value = event.target.value;
-        let index = $(".event-create-modal .base-input").index(this);
+        let index = $(".create-action-modal .base-input").index(this);
         
-        let errorField = $(".event-create-modal .field-item .error-text")[index];
+        let errorField = $(".create-action-modal .field-item .error-text")[index];
         console.log({ errorField })
         
         console.log({
             name, value, index
         })
+        let container = event.target.closest(".create-action-modal");
+        console.log({ container })
 
-        eventFields[index] = {
-            ...eventFields[index],
+        let array = container.classList.contains("space-create-modal") ? spaceFields : eventFields;
+        array[index] = {
+            ...array[index],
             value,
         }
         
         if (!value) {
-          if (eventFields[index].isRequired) {
+          if (array[index].isRequired) {
               $(this).removeClass("with-error");
               let errorText =!value ? "This field is required" : ""
-              eventFields[index] = {
-                  ...eventFields[index],
+              array[index] = {
+                  ...array[index],
                   hasError: !value,
                   errorText
               }
@@ -488,12 +670,16 @@ $(document).ready(function () {
           
           
         } else {
-            if (name === 'totalSpaces' || name === "ticketPrice") {
-                let value = parseFloat(event.target.value)
+            if (
+                name === 'totalSpaces' 
+                || name === 'totalSeats' 
+                || name === "ticketPrice"
+            ) {
+                let value = name === 'totalSeats' ? parseInt(event.target.value) : parseFloat(event.target.value)
                 console.log({ value })
                 $(this).removeClass("with-error");
-                eventFields[index] = {
-                    ...eventFields[index],
+                array[index] = {
+                    ...array[index],
                     hasError: isNaN(value),
                     errorText: isNaN(value) ? "Invalid value" : ""
                 }
@@ -506,8 +692,8 @@ $(document).ready(function () {
                 errorField.innerText = "";
                 $(this).removeClass("with-error");
 
-                eventFields[index] = {
-                    ...eventFields[index],
+                array[index] = {
+                    ...array[index],
                     hasError: false,
                     errorText: ""
                 }
@@ -519,66 +705,92 @@ $(document).ready(function () {
         
         
     })
-    $(document).on("click", ".event-create-modal .close-icon", function (event) {
+    $(document).on("click", ".create-action-modal .close-icon", function (event) {
         closeModal();
     })
-    $(document).on("click", ".create-action-btn", function (event) {
+    
+    $(document).on("click", ".space-action-btn", function (event) {
         event.preventDefault();
-        $(".event-create-modal .base-input").removeClass("with-error");
-        $(".event-create-modal .field-item .error-text").text("");
-        
-        let fieldItems = document.querySelectorAll(".event-create-modal .base-input");
-        let errorFields = document.querySelectorAll(".event-create-modal .field-item .error-text")
-        let fieldsWithError = eventFields.filter((field, index) => {
-            if (field.isRequired && !field.value) {
-                fieldItems[index].classList.add("with-error");
-                errorFields[index].innerText = "This field is required.";
-                return true;
-            }
-            
-            if (field.hasError) {
-                fieldItems[index].classList.add("with-error");
-                errorFields[index].innerText = field.errorText;
-            }
-            return field.hasError;
-        })
-        
-        const updateEvent = async (id) => {
-            let response = await fetch(`/Event/${id}`, {
-                method: "PUT",
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-                body: JSON.stringify(createRequestBody())
-            })
-            
-            if (!response.ok) {
-                throw new Error(response.statusText);
-            }
-            return await response.json();
+
+        let index = parseInt($(this).attr("data-index"));
+        let fieldsWithError = getFieldsWithErrors(spaceFields);
+        const resetButton = () => {
+            $(this).removeClass("button-error");
+            $(this).removeClass("button-success");
+
+            $(this).addClass("button-secondary");
+            $(this).text(`${ index === -1 ? 'Create': 'Update' } Space`);
+
+            $(this).removeAttr("disabled")
         }
+        
+        
+        console.log({ fieldsWithError })
+        if (fieldsWithError.length === 0) {
+            $(this).attr("disabled", "disabled");
+            $(this).text(`${index === -1 ? 'Creating' : 'Updating'} space...`);
+
+            let spaceItem = index !== -1 ? spaceList[index] : null;
+            let request = index === -1 ? createSpace() : updateSpace(spaceItem?.id);
+            request.then(space => {
+                console.log("Space:", { space });
+                $(this).removeClass("button-secondary");
+                $(this).addClass("button-success");
+                $(this).text(`Space ${ index === -1 ? 'Created' : 'Updated' }!`)
+
+                if (spaceList) {
+                    if (index !== -1) {
+                        spaceList[index] = space;
+                    } else {
+                        spaceList.push(space)
+                    }
+                    createSpaceList();
+                }
+                
+                setTimeout(() => {
+                    resetButton();
+                    closeModal();
+                }, 2000);
+            }).catch(err => {
+                let message = err.message;
+                console.log({ errorMessage: message })
+                $(this).removeClass("button-secondary");
+                $(this).addClass("button-error");
+                $(this).text(`Error ${ index === -1 ? 'creating' : 'updating' } event`);
+
+                setTimeout(() => {
+                    resetButton();
+                }, 3000);
+            })
+        }
+    })
+    
+   
+    $(document).on("click", ".event-action-btn", function (event) {
+        event.preventDefault();
+
+        let index = parseInt($(this).attr("data-index"));
+        let fieldsWithError = getFieldsWithErrors(eventFields);
         const resetButton = () => {
             $(this).removeClass("button-error");
             $(this).removeClass("button-success");
             
             $(this).addClass("button-secondary");
-            $(this).text("Create Event");
+            $(this).text(`${ index === -1 ? 'Create': 'Update' } Event`);
             
             $(this).removeAttr("disabled")
         }
         
         if (fieldsWithError.length === 0) {
-            let index = parseInt($(this).attr("data-index"));
+
             console.log({ index })
             $(this).attr("disabled", "disabled");
             $(this).text(`${index === -1 ? 'Creating' : 'Updating'} event...`)
             
            
-            let event = eventList[index];
+            let eventItem = index !== -1 ? eventList[index] : null;
             console.log("Event:", event);
-            let request = index === -1 ? createEvent() : updateEvent(event.id);
+            let request = index === -1 ? createEvent() : updateEvent(eventItem?.id);
             
             request.then(event => {
                 
@@ -587,8 +799,16 @@ $(document).ready(function () {
                 $(this).addClass("button-success");
                 $(this).text(`Event ${ index === -1 ? 'Created' : 'Updated' }!`)
                 
-                eventList[index] = event;
-                createEventList();
+                if (eventList) {
+                    if (index !== -1) {
+                        eventList[index] = event;
+                    } else {
+                        eventList.push(event);
+                    }
+
+                    createEventList();
+                }
+              
                 
                 
                 setTimeout(() => {

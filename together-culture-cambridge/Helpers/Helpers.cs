@@ -1,9 +1,12 @@
 using System.Text.Json.Nodes;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using MySqlX.XDevAPI.Relational;
 using Newtonsoft.Json.Linq;
 using Org.BouncyCastle.Pqc.Crypto.Lms;
 using together_culture_cambridge.Data;
 using together_culture_cambridge.Models;
+using Row = Mysqlx.Resultset.Row;
 
 namespace together_culture_cambridge.Helpers;
 
@@ -66,6 +69,21 @@ public class Methods
             approved = endUser.Approved,
         });
     }
+
+    public static int ReadUserCookie(HttpRequest request)
+    {
+        var userCookie = request.Cookies["tc-session-user"];
+        if (String.IsNullOrEmpty(userCookie))
+        {
+            return -1;
+        }
+            
+        byte[] byteArray = Convert.FromBase64String(userCookie);
+        string base64String = System.Text.Encoding.UTF8.GetString(byteArray);
+
+        return int.Parse(base64String);
+    }
+    
 
     public static int ReadAdminCookie(HttpRequest request)
     {
@@ -141,8 +159,6 @@ public class Methods
     public static JsonArray CreateEventList(List<Event> events, ApplicationDatabaseContext context)
     {
         JsonArray eventArray = new JsonArray();
-
-        Console.WriteLine("Fetched events");
         foreach (var @event in events)
         {
             var result = CreateEventItem(@event, context);
@@ -150,5 +166,76 @@ public class Methods
         }
 
         return eventArray;
+    } 
+
+
+
+    public static List<SpaceBooking> GetSpaceBookings(Space spaceItem, ApplicationDatabaseContext context)
+    {
+        var bookings = context.SpaceBooking.Where(
+            booking =>
+                booking.SpaceId == spaceItem.Id
+        ).Join(context.Space,
+            booking => booking.SpaceId,
+            space => space.Id,
+            (booking, space) => new { booking, space }
+        ).Join(context.EndUser, 
+            bookingData => bookingData.booking.EndUserId,
+            user => user.Id,
+            (bookingData, user) => new SpaceBooking
+            {
+                EndUser = user,
+                EndUserId = user.Id,
+                Space = bookingData.space,
+                SpaceId = bookingData.space.Id,
+                BookingDate = bookingData.booking.BookingDate,
+            }
+        ).Join(context.Membership,
+            spaceBooking => spaceBooking.EndUser.MembershipId,
+            membership => membership.Id, 
+            (spaceBooking, membership) => new { spaceBooking, membership }
+        ).ToList();
+
+
+        List<SpaceBooking> bookingList = [];
+        foreach (var booking in bookings)
+        {
+            if ((DateTime.Now - booking.spaceBooking.BookingDate).Days == 0)
+            {
+                booking.spaceBooking.EndUser.Membership = booking.membership;
+                bookingList.Add(booking.spaceBooking);
+            }
+        }
+
+        return bookingList;
+    }
+
+
+    public static JsonResult CreateSpaceItem(Space spaceItem, ApplicationDatabaseContext context)
+    {
+       var spaceBookings = GetSpaceBookings(spaceItem, context);
+       return new JsonResult(new
+       {
+           id = spaceItem.Id,
+           minimumAccessLevel = spaceItem.MinimumAccessLevel,
+           totalSeats = spaceItem.TotalSeats,
+           openingTime = spaceItem.OpeningTime,
+           closingTime = spaceItem.ClosingTime,
+           roomId = spaceItem.RoomId,
+           createdAt = spaceItem.CreatedAt,
+           bookedSeats = spaceBookings.Count
+       });
+    }
+
+    public static JsonArray CreateSpaceList(List<Space> spaces, ApplicationDatabaseContext context)
+    {
+        JsonArray spaceArray = new JsonArray();
+        foreach (var space in spaces)
+        {
+            var result = CreateSpaceItem(space, context);
+            spaceArray.Add(result.Value);
+        }
+        
+        return spaceArray;
     }
 }

@@ -1,0 +1,5 @@
+.admin-spaces-page .top-row box-icon{
+    width: 17px;
+    height: 17px;
+    filter:brightness(0) saturate(100%) invert(100%) sepia(58%) saturate(25%) hue-rotate(59deg) brightness(106%) contrast(106%);
+}

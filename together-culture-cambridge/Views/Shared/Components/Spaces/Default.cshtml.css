@@ -1,0 +1,35 @@
+.search-section{
+    max-width: 400px;
+    margin: .5rem auto;
+}
+
+.search-box{
+    position: relative;
+}
+
+.loading-section,
+.load-error-section{
+    display: flex;
+}
+
+.loading-section .spinner + span{
+    margin-left: .5rem;
+    color: var(--dark-pink);
+}
+
+.load-error-section{
+    color: var(--red);
+    background: transparent;
+    border: 1px solid transparent;
+}
+
+
+.load-error-section img + span{
+    margin-left: .5rem;
+}
+
+.space-grid{
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-gap: 1rem 1.2rem;
+}

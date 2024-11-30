@@ -26,7 +26,10 @@ namespace together_culture_cambridge.Controllers
         public async Task<IActionResult> Index()
         {
             int adminId = Methods.ReadAdminCookie(Request);
-            if (adminId == -1)
+            int userId = Methods.ReadUserCookie(Request);
+            
+            bool validUser = adminId != -1 || userId != -1;
+            if (!validUser)
             {
                 Response.StatusCode = StatusCodes.Status401Unauthorized;
                 return Json(new { message = "Unauthorized request" });
@@ -45,7 +48,10 @@ namespace together_culture_cambridge.Controllers
         public async Task<IActionResult> Search()
         {
             int adminId = Methods.ReadAdminCookie(Request);
-            if (adminId == -1)
+            int userId = Methods.ReadUserCookie(Request);
+            
+            bool validUser = adminId != -1 || userId != -1;
+            if (!validUser)
             {
                 Response.StatusCode = StatusCodes.Status401Unauthorized;
                 return Json(new { message = "Unauthorized request" });
@@ -151,7 +157,6 @@ namespace together_culture_cambridge.Controllers
         public async Task<IActionResult> Create()
         {
             
-            Console.WriteLine("Endpoint activated");
             int adminId = Methods.ReadAdminCookie(Request);
             if (adminId == -1)
             {
