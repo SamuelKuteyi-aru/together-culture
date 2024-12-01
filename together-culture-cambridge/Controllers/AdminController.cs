@@ -87,6 +87,17 @@ namespace together_culture_cambridge.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult LogOut()
+        {
+            if (Request.Cookies["tc-session-admin"] != null)
+            {
+                Response.Cookies.Delete("tc-session-admin");
+            }
+            
+            return RedirectToAction("Login", "Admin");
+        }
+
         [HttpPost]
         [Route("Admin/Approve/{userId}")]
         public async Task<IActionResult> Approve(int userId)
