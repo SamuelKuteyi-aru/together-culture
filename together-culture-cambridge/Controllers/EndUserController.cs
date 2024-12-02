@@ -336,8 +336,14 @@ namespace together_culture_cambridge.Controllers
             string messageBody = "<h4 style='margin-bottom: 15px'>Hello from Together culture</h4>" +
                                    "<p>Please enter the code below to verify your email address. This code expires in 30 minutes.<p>" +
                                    $"<div style='margin: 15px 0; border-radius: 10px; background: rgba(259, 209, 209, .45); color: #481326;justify-content: center; padding: .5rem 1rem; text-align: center; width: fit-content; display: flex; font-weight: 700;'><span>{ generatedCode.ToString() }</span></div>";
-            
-            var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
+
+
+            /*
+             * Added the api key here for submission purposes, api keys are normally added
+             * separately in uncommitted environment files that are not checked in source control
+             */
+            var apiKey = "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";
+            //var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
             var client = new SendGridClient(apiKey);
             var fromEmail = new EmailAddress("osk103@student.aru.ac.uk", "TC");
             var subject = "Verify your email address";
