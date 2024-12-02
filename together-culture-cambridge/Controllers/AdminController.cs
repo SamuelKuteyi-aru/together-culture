@@ -137,8 +137,7 @@ namespace together_culture_cambridge.Controllers
                 Response.StatusCode = StatusCodes.Status401Unauthorized;
                 return Json(new { message = "Unauthorized request" });
             }
-
-            Console.WriteLine("Admin: {0}", adminId);
+            
             var admin = await _context.Admin.FindAsync(adminId);
 
             if (admin == null)

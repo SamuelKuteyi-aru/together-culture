@@ -114,6 +114,8 @@ $(document).ready(function () {
                         $(this).text("Log in")
                         if (response.loginType === "Admin") {
                             window.location.href = "/Admin/Dashboard";
+                        } else if (response.loginType === "EndUser") {
+                            window.location.href = "/EndUser/Dashboard";
                         }
                     } else {
                         setErrorSection(response.body.message ?? defaultErrorMessage)

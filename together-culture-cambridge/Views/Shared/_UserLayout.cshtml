@@ -12,13 +12,13 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/admin.js" async defer></script>
+    <script src="~/js/user.js" asp-append-version="true"></script>
 </head>
 <body class="body-neutral">
 <div class="layout-load-section process-section">
     <div class="d-flex align-items-center">
         <div class="spinner alt-spinner"></div>
-        <span>Loading admin account..</span>
+        <span>Loading user account..</span>
     </div>
 </div>
 
@@ -28,12 +28,12 @@
              alt="error exclamation"
         />
         
-        <span class="load-text">Error loading admin account</span>
+        <span class="load-text">Error loading user account</span>
     </div>
 </div>
-<main class="main-container admin d-none">
+<main class="main-container user d-none">
     <nav class="d-flex flex-column">
-        <a asp-area="" asp-controller="Admin" asp-action="Dashboard">
+        <a asp-area="" asp-controller="EndUser" asp-action="Dashboard">
             <img alt="together culture"
                  class="tc-logo"
                  src="~/images/tc-logo.png"/>
@@ -41,26 +41,26 @@
 
         <ul class="nav-list">
             <li>
-                <a asp-area="" asp-controller="Admin" asp-action="Dashboard">
+                <a asp-area="" asp-controller="EndUser" asp-action="Dashboard">
                     <img alt="dashboard" src="~/icons/radix-icons_dashboard.svg"/>
                     <span>Dashboard</span>
                 </a>
             </li>
             <li>
-                <a asp-area="" asp-controller="Admin" asp-action="Events">
+                <a asp-area="" asp-controller="EndUser" asp-action="Events">
                     <img alt="dashboard" src="~/icons/calendar-week.svg"/>
                     <span>Events</span>
                 </a>
             </li>
             
             <li>
-                <a asp-area="" asp-controller="Admin" asp-action="Spaces">
+                <a asp-area="" asp-controller="EndUser" asp-action="Spaces">
                     <img alt="shuttle" src="~/icons/shuttle.svg"/>
                     <span>Spaces</span>
                 </a>
             </li>
         </ul>
-        <a asp-area="" asp-controller="Admin" asp-action="LogOut" class="signout-link">
+        <a asp-area="" asp-controller="EndUser" asp-action="LogOut" class="signout-link">
             <img alt="sign out" src="~/icons/sign-out-icon.svg"/>
             <span>Sign out</span>
         </a>
@@ -68,7 +68,7 @@
     <section class="main">
         <div class="main-header mb-4">
             <div class="breadcrumb mb-0">
-                <div class="breadcrumb-item main">Admin</div>
+                <div class="breadcrumb-item main">User</div>
                 <span class="separator">/</span>
                 <a href="javascript:void(0)" class="breadcrumb-item sub">
                 </a>

@@ -23,6 +23,59 @@ namespace together_culture_cambridge.Controllers
             _context = context;
         }
 
+        [HttpGet]
+        [Route("/EndUser")]
+
+        public async Task<IActionResult> Get()
+        {
+            int userId = Methods.ReadUserCookie(Request);
+
+            if (userId == -1)
+            {
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Json(new { message = "Unauthorized request" });
+            }
+
+            var userData = await _context.EndUser
+                .Where(endUser => endUser.Id == userId)
+                .Join(_context.Membership,
+                    user => user.MembershipId,
+                    membership => membership.Id,
+                    (user, membership) => new { membership, endUser = user }
+                 ).FirstOrDefaultAsync();
+            if (userData == null)
+            {
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Json(new { message = "User not found" });
+            }
+
+            
+
+            userData.endUser.Membership = userData.membership;
+            var user = userData.endUser;
+            if (!user.Approved)
+            {
+                Response.StatusCode = StatusCodes.Status403Forbidden;
+                return Json(new { message = "This account is not yet approved" });
+            }
+
+            var publicUser = Methods.PublicFacingUser(user).Value;
+
+            var eventBookingList = Methods.GetBookedEvents(_context, user.Id);
+            var eventBookings = Methods.CreateEventList(eventBookingList, _context);
+            
+            var spaceBookingList = Methods.GetBookedSpaces(_context, user.Id);
+            var spaceBookings = Methods.CreateBookedSpaceList(spaceBookingList, _context, user.Id);
+
+            var result = new JsonResult(new
+            {
+                user = publicUser,
+                spaceBookings = spaceBookings,
+                eventBookings = eventBookings,
+            });
+            return Ok(result.Value);
+        }
+
         // Route: /EndUser/Login
         [HttpGet]
         public IActionResult Login()
@@ -30,6 +83,35 @@ namespace together_culture_cambridge.Controllers
             return View();
         }
 
+
+        // Route: /EndUser/Dashboard
+        public IActionResult Dashboard()
+        {
+            return View();
+        }
+        
+        // Route: /EndUser/Events
+        public IActionResult Events()
+        {
+            return View();
+        }
+        
+        // Route: /EndUser/Spaces
+        public IActionResult Spaces()
+        {
+            return View();
+        }
+        
+        public IActionResult LogOut()
+        {
+            if (Request.Cookies["tc-session-user"] != null)
+            {
+                Response.Cookies.Delete("tc-session-user");
+            }
+            
+            return RedirectToAction("Login", "EndUser");
+        }
+        
         // Route: /EndUser/Unapproved
         [HttpGet]
 
@@ -44,7 +126,7 @@ namespace together_culture_cambridge.Controllers
 
             var guestMembership = await _context.Membership
                 .Where(m => m.MembershipType == Enum.Parse<Membership.MembershipEnum>("Guest")).FirstOrDefaultAsync();
-            Console.WriteLine("Guest membership: {0}", guestMembership?.Id);
+          //  Console.WriteLine("Guest membership: {0}", guestMembership?.Id);
             var userList = await _context.EndUser
                 .Where(user => !user.Approved && (guestMembership != null && user.MembershipId != guestMembership.Id))
                 .Join(

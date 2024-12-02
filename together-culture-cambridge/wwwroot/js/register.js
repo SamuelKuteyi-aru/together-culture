@@ -788,7 +788,7 @@ $(document).on("click", ".account-btn", function (e) {
         console.log("Response:", response)
         if (response.statusCode === 200) {
             $(this).addClass("button-success");
-            $(this).text("Account created successfully.");
+            $(this).text("Account created. Approval will be processed.");
     
             resetAccountButton();
         } else {

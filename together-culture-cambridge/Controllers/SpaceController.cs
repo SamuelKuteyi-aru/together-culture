@@ -100,26 +100,25 @@ namespace together_culture_cambridge.Controllers
         {
             int adminId = Methods.ReadAdminCookie(Request);
             int userId = Methods.ReadUserCookie(Request);
-            
+
             bool validUser = adminId != -1 || userId != -1;
             if (!validUser)
             {
                 Response.StatusCode = StatusCodes.Status401Unauthorized;
                 return Json(new { message = "Unauthorized request" });
             }
-            
+
             if (!Request.Query.Keys.Contains("query"))
             {
                 Response.StatusCode = StatusCodes.Status400BadRequest;
                 return Json(new { message = "Query parameter is required" });
             }
-            
+
             var query = Request.Query["query"].ToString().ToLower();
 
             var spaceList = await _context.Space
-                .Where(spaceItem => 
-                    spaceItem.RoomId.ToLower().Contains(query))
-                .ToListAsync();
+                .Where(spaceItem =>
+                    spaceItem.RoomId.ToLower().Contains(query)).ToListAsync();
             
             return Ok(Methods.CreateSpaceList(spaceList, _context));
         }

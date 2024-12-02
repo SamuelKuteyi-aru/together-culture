@@ -168,7 +168,40 @@ public class Methods
         }
 
         return eventArray;
-    } 
+    }
+
+    public static List<Event> GetBookedEvents(ApplicationDatabaseContext context, int userId)
+    {
+        return context
+            .EventBooking
+            .Where(eventBooking => eventBooking.EndUserId == userId)
+            .Join(context.Event,
+                booking => booking.EventId,
+                @event => @event.Id,
+                (booking, @event) => @event).ToList();
+    }
+
+    public class BookedSpace
+    {
+        public SpaceBooking SpaceBooking { get; set; } = null!;
+        public Space Space { get; set; } = null!;
+
+    }
+
+    public static List<BookedSpace> GetBookedSpaces(ApplicationDatabaseContext context, int userId)
+    {
+        return context
+            .SpaceBooking
+            .Where(spaceBooking => spaceBooking.EndUserId == userId)
+            .Join(context.Space,
+                booking => booking.SpaceId,
+                space => space.Id,
+                (booking, space) => new BookedSpace
+                {
+                    SpaceBooking = booking,
+                    Space = space,
+                }).ToList();
+    }
 
 
 
@@ -213,9 +246,10 @@ public class Methods
     }
 
 
-    public static JsonResult CreateSpaceItem(Space spaceItem, ApplicationDatabaseContext context)
+    public static JsonResult CreateSpaceItem(Space spaceItem, ApplicationDatabaseContext context, SpaceBooking? booking = null)
     {
        var spaceBookings = GetSpaceBookings(spaceItem, context);
+       
        return new JsonResult(new
        {
            id = spaceItem.Id,
@@ -225,12 +259,40 @@ public class Methods
            closingTime = spaceItem.ClosingTime,
            roomId = spaceItem.RoomId,
            createdAt = spaceItem.CreatedAt,
-           bookedSeats = spaceBookings.Count
+           bookedSeats = spaceBookings.Count,
+           bookingDate = booking?.BookingDate ?? null
        });
+    }
+
+    public static JsonArray CreateBookedSpaceList(List<BookedSpace> spaces, ApplicationDatabaseContext context, int endUserId)
+    {
+        var endUserList = context.EndUser.Where(user => user.Id == endUserId)
+                .Join(context.Membership,
+                    user => user.MembershipId,
+                    membership => membership.Id,
+                    (user, membership) => new { user, membership }
+                ).ToList();
+        
+        JsonArray spaceArray = new JsonArray();
+        foreach (var space in spaces)
+        {
+            if (endUserList.Count > 0)
+            {
+                var endUser = endUserList.First();
+                if (endUser.membership.MembershipType >= space.Space.MinimumAccessLevel)
+                {
+                    var result = CreateSpaceItem(space.Space, context, space.SpaceBooking);
+                    spaceArray.Add(result.Value);
+                }
+            }  
+        }
+
+        return spaceArray;
     }
 
     public static JsonArray CreateSpaceList(List<Space> spaces, ApplicationDatabaseContext context)
     {
+        
         JsonArray spaceArray = new JsonArray();
         foreach (var space in spaces)
         {

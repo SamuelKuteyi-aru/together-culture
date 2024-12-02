@@ -432,10 +432,7 @@ const createEventModal = (eventIndex = null) => {
     createActionModal(eventIndex, "event")
 }
 $(document).ready(function () {
-    let href = window.location.href;
-    let hrefSplit = href.split('/');
-    let lastSplitValue = hrefSplit[hrefSplit.length - 1];
-    $(".breadcrumb .breadcrumb-item.sub").text(lastSplitValue);
+    $(".breadcrumb .breadcrumb-item.sub").text(getBreadcrumbPage());
     
     let loadSection = $(".layout-load-section.process-section");
     let errorSection = $(".layout-load-section.error-section");
@@ -454,10 +451,7 @@ $(document).ready(function () {
             $(".header-section .user-welcome .user-name").text(systemAdmin.firstName);
             mainSection.removeClass("d-none");
             
-            
-           
             let path = window.location.pathname.slice(1).split(/\//g);
-            
             if (path.length >= 2 && path[1] === 'Dashboard') {
                 console.log({ path })
                 getUnapprovedAccounts();
@@ -725,7 +719,7 @@ $(document).ready(function () {
         }
         
         
-        console.log({ fieldsWithError })
+       
         if (fieldsWithError.length === 0) {
             $(this).attr("disabled", "disabled");
             $(this).text(`${index === -1 ? 'Creating' : 'Updating'} space...`);

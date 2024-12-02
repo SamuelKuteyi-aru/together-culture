@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using together_culture_cambridge.Data;
+using together_culture_cambridge.Helpers;
 using together_culture_cambridge.Models;
 
 namespace together_culture_cambridge.Controllers
@@ -46,30 +48,97 @@ namespace together_culture_cambridge.Controllers
             return View(eventBooking);
         }
 
-        // GET: EventBooking/Create
-        public IActionResult Create()
+
+        [HttpPost]
+        public async Task<IActionResult> Cancel()
         {
-            ViewData["EndUserId"] = new SelectList(_context.EndUser, "Id", "Id");
-            ViewData["EventId"] = new SelectList(_context.Event, "Id", "Id");
-            return View();
+            var userId = Methods.ReadUserCookie(Request);
+            if (userId == -1)
+            {
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Json(new { message = "Unauthorized request" });
+            }
+            StreamReader reader = new StreamReader(Request.Body);
+            var bodyString = await reader.ReadToEndAsync();
+            JObject body = JObject.Parse(bodyString);
+
+            var bodyEventId = body["eventId"];
+            if (bodyEventId == null) {
+                Response.StatusCode = StatusCodes.Status400BadRequest;
+                return Json(new { message = "Event ID is required" });
+            }
+
+            var eventId = int.Parse(bodyEventId.ToString());
+            var @event = await  _context.Event.FindAsync(eventId);
+            if (@event == null)
+            {
+                Response.StatusCode = StatusCodes.Status404NotFound;
+                return Json(new { message = "Event not found" });
+            }
+            
+            var eventBooking = await _context.EventBooking.Where(booking => booking.EndUserId == userId && booking.EventId == eventId).FirstOrDefaultAsync();
+            if (eventBooking == null)
+            {
+                Response.StatusCode = StatusCodes.Status400BadRequest;
+                return Json(new { message = "Event booking not found" });
+            }
+
+            _context.EventBooking.Remove(eventBooking);
+            await _context.SaveChangesAsync();
+            
+            return Json(new { message = "Event booking has been cancelled" });
         }
 
         // POST: EventBooking/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,EventId,EndUserId")] EventBooking eventBooking)
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create()
         {
-            if (ModelState.IsValid)
+            var userId = Methods.ReadUserCookie(Request);
+            if (userId == -1)
             {
-                _context.Add(eventBooking);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Json(new { message = "Unauthorized request" });
             }
-            ViewData["EndUserId"] = new SelectList(_context.EndUser, "Id", "Id", eventBooking.EndUserId);
-            ViewData["EventId"] = new SelectList(_context.Event, "Id", "Id", eventBooking.EventId);
-            return View(eventBooking);
+            StreamReader reader = new StreamReader(Request.Body);
+            var bodyString = await reader.ReadToEndAsync();
+            JObject body = JObject.Parse(bodyString);
+
+            var bodyEventId = body["eventId"];
+            if (bodyEventId == null) {
+                Response.StatusCode = StatusCodes.Status400BadRequest;
+                return Json(new { message = "Event ID is required" });
+            }
+
+            var eventId = int.Parse(bodyEventId.ToString());
+            var @event = await  _context.Event.FindAsync(eventId);
+            if (@event == null)
+            {
+                Response.StatusCode = StatusCodes.Status404NotFound;
+                return Json(new { message = "Event not found" });
+            }
+            
+            var bookingList = await _context.EventBooking.Where(x => x.EventId == @event.Id).ToListAsync();
+            if (bookingList.Count >= @event.TotalSpaces)
+            {
+                Response.StatusCode = StatusCodes.Status400BadRequest;
+                return Json(new { message = "Event is full" });
+            }
+
+            var eventBooking = new EventBooking
+            {
+                EventId = eventId,
+                EndUserId = userId
+            };
+            
+            _context.Add(eventBooking);
+            await _context.SaveChangesAsync();
+
+
+            var eventItem = Methods.CreateEventItem(@event, _context);
+            return Ok(eventItem.Value);
         }
 
         // GET: EventBooking/Edit/5
