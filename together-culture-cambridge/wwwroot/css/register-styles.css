@@ -1,0 +1,65 @@
+.review-body{
+    max-width: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+}
+.review-body .review-title{
+    font-size: .95rem;
+}
+
+
+.review-body .review-price{
+    margin: 1rem 0;
+    color: var(--dark-pink);
+    display: flex;
+    justify-content: center;
+}
+
+.review-body .review-price .review-currency{
+    font-size: 1rem;
+    opacity: .6;
+    margin: 2px 2px 0 0;
+}
+
+
+.review-body .review-price .price-tag{
+    font-size: 1.35rem;
+    font-weight: 600;
+}
+
+.review-body .review-breakdown{
+    font-size: .9rem;
+    opacity: .8;
+}
+
+
+.review-body .account-btn{
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    max-width: 100%;
+}
+
+.review-body .account-btn .spinner{
+    width: 16px;
+    height: 16px;
+    margin-left: .5rem;
+}
+
+
+.auth-box{
+    background: var(--white);
+    padding: 1rem 1.25rem;
+    border-radius: 20px;
+    max-width: 550px;
+    margin: 1.35rem auto;
+    box-shadow: 0 0 1px 2px rgba(255, 196, 196, .35), 0 0 2px 5px rgba(255, 196, 196, .5);
+}
+
+.input-label{
+    font-weight: 500;
+}

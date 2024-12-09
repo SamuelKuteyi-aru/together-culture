@@ -1,0 +1,15 @@
+@{
+    ViewBag.Title = "Events";
+    Layout = "_AdminLayout";
+}
+
+<div class="admin-events-page">
+    <div class="top-row d-flex justify-content-end align-items-center">
+        <button class="button button-primary d-flex align-items-center event-create-btn">
+            <box-icon size="sm" name="plus"></box-icon>
+            <span>Create Event</span>
+        </button>
+    </div>
+    
+    @await Component.InvokeAsync("Events")
+</div>

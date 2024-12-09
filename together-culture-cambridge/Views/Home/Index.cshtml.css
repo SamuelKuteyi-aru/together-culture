@@ -1,0 +1,354 @@
+.banner {
+    width: 100%;
+    height: calc(100vh - 108px);
+    min-height: 600px;
+    position: relative;
+    background: #ffc4c4;
+    margin-bottom: 1.5rem;
+}
+
+.banner-bg{
+    width: calc(100% - 150px);
+    left: 50%;
+    transform: translateX(-50%);
+    height: 100%;
+    padding-bottom: 2.5rem;
+}
+.banner-bg .bg-content {
+    top: 0;
+    height: 100%;
+    border-radius: 0 0 50% 50% / 0 0 100% 100%;
+    background: #ffa5a5;
+    position: relative;
+    z-index: -1;
+}
+
+.banner-bg .bg-content .bg-content-upper {
+    content: '';
+    position: absolute;
+    top: -108px;
+    height: 108px;
+    width: calc(100% + 150px);
+    background: #ffa5a5;
+    left: -75px;
+    z-index: -1;
+    overflow-x: hidden;
+}
+
+.banner-bg .bg-content .bg-content-upper .content{
+    background: inherit;
+}
+.banner-bg .bg-content .bg-content-upper .content:before,
+.banner-bg .bg-content .bg-content-upper .content:after{
+    width: 75px;
+    height: 100%;
+    content: '';
+    position: absolute;
+    background: #ffc4c4;
+}
+.banner-bg .bg-content .bg-content-upper .content:before {
+    left: 0;
+    border-radius: 0 80% 0 0 / 0 100% 0 0;
+}
+
+.banner-bg .bg-content .bg-content-upper .content:after {
+    right: 0;
+    border-radius: 80% 0 0 0 / 100% 0 0 0;
+}
+
+.banner .banner-content{
+    width: 950px;
+    max-width: calc(100% - 1rem);
+    position: relative;
+    z-index: 1;
+}
+
+
+.banner-content .banner-title {
+    justify-content: center;
+    align-items: center;
+    font-family: "Playfair Display", sans-serif;
+}
+.banner-content .banner-title span:not(.main) {
+    font-size: 2rem;
+    opacity: .6;
+}
+
+.banner-content .banner-title span.main{
+    font-size: 2.5rem;
+    margin: 0 .5rem;
+    font-weight: 800;
+}
+
+.banner-content .banner-description{
+    width: 500px;
+    max-width: 100%;
+    font-size: 1.05rem;
+    
+}
+.banner-content .banner-images {
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.banner-content .banner-images .image-content{
+    padding: 1rem .5rem;
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 0 1px 2px rgba(255, 196, 196, .5), 0 0 2px 3px rgba(255, 196, 196, .75);
+    display: flex;
+    flex-direction: column;
+}
+.banner-content .banner-images .image-content:not(.main) {
+    height: 250px;
+    width: calc(30% - .5rem);
+}
+
+.banner-content .banner-images .image-content.main {
+    height: 300px;
+    margin: 0 1rem;
+    width: calc(40% - 1rem);
+}
+
+.banner-images .image-content header {
+    font-size: .95rem;
+    text-align: center;
+    color: var(--dark-pink);
+    font-weight: 600;
+}
+
+.banner-images .image-content img {
+    width: 100%;
+    height: calc(100% - 80px);
+    object-fit: contain;
+    margin: auto 0;
+}
+
+
+.banner-images .image-content button{
+    padding: .3rem .75rem;
+    width: 160px;
+    margin: 0 auto;
+    max-width: 100%;
+}
+
+section.community {
+  
+}
+
+section.community .section-heading .section-item {
+    width: calc(40% - .5rem);
+}
+
+section.community .section-heading .section-item .section-label {
+    font-size: .9rem;
+    text-transform: uppercase;
+    margin-bottom: .5rem;
+    font-weight: 500;
+}
+section.community .section-heading .section-item .section-heading{
+    font-size: 2.5rem;
+    line-height: 3.5rem;
+    font-weight: 700;
+    font-family: "Playfair Display", sans-serif;
+    color: var(--dark-pink);
+}
+
+section.community .section-heading .section-item .section-text{
+    font-size: 1.05rem;
+    opacity: .85;
+}
+section.community .features {
+    justify-content: space-between;
+    align-items: center;
+    width: 1200px;
+    max-width: 100%;
+    margin: 4rem auto;
+}
+
+section.community .features .feature-item{
+    width: calc(33% - 1rem);
+    background: var(--white);
+    box-shadow: 0 0 1px 2px rgba(255, 165, 165, .15), 0 0 2px 5px rgba(255, 165, 165, .2);
+   padding: 1.2rem 1.35rem;
+    border-radius: 12px;
+    align-self: stretch;
+    flex: 0 0 auto;
+}
+
+section.community .features .feature-item img {
+    width: 35px;
+    height: 35px;
+    filter: brightness(0) saturate(100%) invert(10%) sepia(32%) saturate(3254%) hue-rotate(308deg) brightness(91%) contrast(97%);
+}
+
+
+section.community .features .feature-item h3 {
+    font-size: 1.1rem;
+    margin: .5rem 0;
+    color: var(--main-pink);
+}
+
+section.community .features .feature-item p{
+    font-size: .95rem;
+    opacity: .8;
+    margin: 1rem 0;
+}
+
+section.kite {
+    width: 100%;
+    height: 600px;
+    position: relative;
+}
+
+section.kite .bg-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+    transition: ease-in-out .8s;
+    filter: blur(0);
+}
+
+section.kite .bg-overlay{
+    background: rgba(0, 0, 0, .7);
+    z-index: 1;
+    transition: ease-in-out .8s;
+}
+
+
+section.kite .kite-banner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    color: var(--white);
+}
+
+section.kite .kite-banner h3,
+section.kite .kite-banner p,
+section.kite .kite-banner a{
+    position: relative;
+    z-index: 2;
+}
+
+section.kite .kite-banner h3 {
+    font-family: "Playfair Display", sans-serif;
+    font-size: 2.5rem;
+}
+
+section.kite .kite-banner p {
+    max-width: 500px;
+    text-align: center;
+    opacity: .8;
+}
+
+section.kite .kite-banner a {
+    color: var(--dark-pink);
+    background: var(--white);
+    margin-top: 1rem;
+    font-size: 1rem;
+    padding: .35rem 1.2rem;
+}
+
+section.kite .kite-banner a:hover {
+    background: transparent;
+    border: 1px solid var(--white);
+    color: var(--white);
+}
+section.kite .kite-banner a:hover + img {
+    filter: blur(6px);
+}
+
+section.kite .kite-banner a:hover + img + .bg-overlay{
+    background: rgba(0, 0, 0, .8);
+}
+
+section.memberships {
+    padding: 3.5rem 0;
+    background: var(--dark-pink);
+    color: var(--white);
+}
+
+section.memberships .page-section{
+    margin: 0 auto;
+}
+
+section.memberships header{
+    font-size: 2.25rem;
+    text-align: center;
+    font-weight: 600;
+}
+
+
+section.memberships .section-description {
+    font-size: .95rem;
+    opacity: .8;
+    width: 450px;
+    max-width: 100%;
+    margin: 1.5rem auto;
+}
+
+section.memberships .membership-types {
+    justify-content: space-between;
+    align-items: center;
+    width: 1200px;
+    max-width: 100%;
+    margin: 3.2rem auto;
+}
+section.memberships .membership-types .item {
+    width: calc(33% - 1rem);
+    padding: 1.2rem 1.35rem;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+}
+
+section.memberships .membership-types .item img {
+    width: 28px;
+    height: 28px;
+    filter: brightness(0) saturate(100%) invert(100%) sepia(99%) saturate(2%) hue-rotate(323deg) brightness(107%) contrast(100%);
+    display: block;
+    margin: 0 auto;
+}
+
+section.memberships .membership-types .item .heading {
+    margin: 1rem 0 1.5rem;
+    font-weight: 600;
+    text-align: center;
+    font-size: 1.15rem;
+}
+
+section.memberships .membership-types .item p {
+    text-align: center;
+    opacity: .8;
+}
+
+section.memberships .membership-types .item button {
+    display: flex;
+    align-items: center;
+    margin: auto;
+    color: var(--white);
+    
+}
+section.memberships .membership-types .item button span {
+    font-size: .95rem;
+    margin-right: .25rem;
+}
+
+section.memberships .membership-types .item button img {
+    width: 20px;
+    height: 20px;
+}
+
+section.memberships .membership-types .item button:hover {
+    color: var(--main-pink)
+}
+
+section.memberships .membership-types .item button:hover img{
+    filter: brightness(0) saturate(100%) invert(64%) sepia(61%) saturate(5429%) hue-rotate(326deg) brightness(99%) contrast(93%);
+}

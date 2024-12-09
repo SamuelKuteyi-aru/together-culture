@@ -1,0 +1,204 @@
+@model IEnumerable<together_culture_cambridge.Models.Membership>;
+@{
+    Layout = "_Layout";
+}
+
+<div class="registration-section">
+    <div class="header text-center">
+        <h3>Create your account.</h3>
+        <p class="mt-4 mx-auto">Sign up as a guest to get access to basic features
+            at our facilities or become a member to get access
+            to a wide range of exclusive features.</p>
+    </div>
+    
+    <div class="registration-box auth-box">
+        <div class="type-list">
+            <div class="reg-type" data-type="guest">
+                Sign up as a guest
+            </div>
+            <div class="reg-type active" data-type="member">
+                Become a member
+            </div>
+        </div>
+        <form id="memberForm" method="post" class="reg-form member">
+            <div class="form-sections">
+                <div class="form-section" data-section="personalInfo">
+                    <div class="section-header">
+                        <span class="label">Personal Information</span>
+                        
+                        <span class="toggle-icon">
+                            <img class="w-100 h-100" alt="toggle section" src="~/icons/angle-down.svg"/>
+                        </span>
+
+                    </div>
+                    <div class="section-body">
+                        @await Component.InvokeAsync("UserInformation")
+                        <div class="input-section my-2">
+                            <label>Password</label>
+                            <div class="input-item">
+                                <input
+                                    placeholder="Enter your password"
+                                    type="password"
+                                    name="password"
+                                    class="base-input"
+                                    value="Sam987412!"
+                                />
+                            </div>
+                            <span class="error-text"></span>
+                            <ul class="password-requirements">
+                                <li class="length-test">
+                                    <span class="dot"></span>
+                                    <span class="checkmark-icon">
+                                        <img class="w-100 h-100" alt="checkmark" src="~/icons/checkmark.svg"/>
+                                    </span>
+                                    <span>Should be at least 8 characters long</span>
+                                </li>
+                                <li class="uppercase-test">
+                                    <span class="dot"></span>
+                                    <span class="checkmark-icon">
+                                        <img class="w-100 h-100" alt="checkmark" src="~/icons/checkmark.svg"/>
+                                    </span>
+                                    <span>Should contain at least 1 uppercase letter</span>
+                                </li>
+                                <li class="digit-test">
+                                    <span class="dot"></span>
+                                    <span class="checkmark-icon">
+                                        <img class="w-100 h-100" alt="checkmark" src="~/icons/checkmark.svg"/>
+                                    </span>
+                                    <span>Should contain at least 1 number</span>
+                                </li>
+                                <li class="special-char-test">
+                                    <span class="dot"></span>
+                                    <span class="checkmark-icon">
+                                        <img class="w-100 h-100" alt="checkmark" src="~/icons/checkmark.svg"/>
+                                    </span>
+                                    <span>Should contain at least 1 special character</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="input-section">
+                            <label>Repeat Password</label>
+                            <div class="input-item">
+                                <input
+                                    placeholder="Enter your password again"
+                                    type="password"
+                                    name="confirmPassword"
+                                    class="base-input"
+                                    value="Sam987412!"
+                                />
+                            </div>
+                            <span class="error-text"></span>
+                        </div>
+                        <div class="d-flex justify-content-end mt-3">
+                            <div class="button-container relative">
+                                <button class="button button-secondary next-step-btn">Save & Proceed</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section" data-section="accountVerification">
+                    <div class="section-header">
+                        <span class="label"> Account Verification</span>
+                        <span class="toggle-icon">
+                            <img class="w-100 h-100" alt="toggle section" src="~/icons/angle-down.svg"/>
+                        </span>
+                    </div>
+                    <div class="section-body">
+                        @await Component.InvokeAsync("VerificationCode")
+                    </div>
+                </div>
+                
+                <div class="form-section" data-section="subscription">
+                    <div class="section-header">
+                        <span class="label"> Subscription Package</span>
+                        <span class="toggle-icon">
+                            <img class="w-100 h-100" alt="toggle section" src="~/icons/angle-down.svg"/> 
+                        </span>
+                  
+                    </div>
+                    
+                    <div class="section-body">
+                        <div class="membership-list">
+                            @foreach (var membership in Model)
+                            {
+                                <div tabindex="0" 
+                                     data-id="@membership.Id"
+                                     data-item="@membership.Name" 
+                                     data-fee="@membership.JoiningFee"
+                                     data-price="@membership.MonthlyPrice"
+                                     class="membership-item @membership.Name?.ToLower().Replace(" ", "-")"
+                                     >
+                                    <div class="price-section">
+                                        <div class="price-item">
+                                            <div class="d-flex items-center">
+                                                <span class="price-icon">
+                                                    <img class="w-100 h-100" src="~/icons/gbp.svg" alt="british pound"/>
+                                                </span>
+                                                <span class="price-value">
+                                                    @membership.MonthlyPrice
+                                                </span>
+                                            </div>
+
+                                            <div class="price-label">
+                                                per month
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="membership-name text-center mt-2">
+                                        <div class="fw-bold"> @Html.DisplayFor(membershipItem => membership.Name)</div>
+                                        <div class="opacity-75"> <span style="display: @( membership.JoiningFee == 0 ? "none" : "inline" )">&#163;</span>@( membership.JoiningFee == 0 ? "No" : @membership.JoiningFee  ) joining fee</div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <div class="error-text text-center d-block"></div>
+                        <div class="discount-section">
+                            <div class="discount-input d-flex my-3">
+                                <input class="base-input"
+                                       type="text"
+                                       name="discountCode"
+                                       placeholder="Enter discount code"
+                                />
+                                <button  class="button button-primary discount-btn">Apply</button>
+                            </div>
+                           
+                            <div class="feedback-section d-none"></div>
+                        </div>
+                        <div class="d-flex justify-content-end mt-4">
+                            <div class="button-container relative">
+                                <button class="button button-secondary next-step-btn">Save & Proceed</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-section" data-section="review">
+                    <div class="section-header">
+                        <span class="label"> Review & Create Account</span>
+                        <span class="toggle-icon">
+                            <img class="w-100 h-100" alt="toggle section" src="~/icons/angle-down.svg"/>
+                        </span>
+                    </div>
+                    <div class="section-body">
+                        
+                    </div>
+                </div>
+            </div>
+            
+        </form>
+        
+        <form id="guestForm" method="post" class="reg-form guest py-4 d-none">
+            @await Component.InvokeAsync("UserInformation")
+            <div class="error-section d-none mt-2"></div>
+            <div class="position-relative w-100 mt-4 btn-container">
+                <button type="submit" class="button button-secondary create-btn py-2 w-100">
+                    Create Guest Account
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="~/js/register.js" async defer></script>
+

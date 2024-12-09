@@ -1,0 +1,29 @@
+.data-section{
+    display: flex;
+    justify-content: space-between;
+}
+
+.data-section .input-section label {
+    font-size: .95rem;
+    color: var(--dark-pink);
+    margin-bottom: .25rem;
+    display: block;
+    font-weight: 600;
+    padding-left: 1.45rem;
+}
+
+
+.data-section .input-section .base-input,
+.data-section .input-section .input-item{
+    width: 100%;
+}
+.data-section.split-section .input-section {
+    width: calc(50% - .5rem);
+}
+
+.data-section .input-section .error-text{
+    display: block;
+    padding-left: 1.45rem;
+    padding-top: .25rem;
+}
+

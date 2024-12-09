@@ -1,0 +1,16 @@
+@{
+    ViewData["Title"] = "Login to your account";
+    Layout = "_Layout";
+}
+
+<div class="login-section">
+    <div class="header text-center">
+        <h3>Login to your account</h3>
+    </div>
+    
+    <div class="auth-box login-box">
+        @await Component.InvokeAsync("LoginForm")
+    </div>
+</div>
+
+

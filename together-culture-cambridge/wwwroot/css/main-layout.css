@@ -1,0 +1,313 @@
+.main-container{
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    overflow-y: hidden;
+}
+
+.main-container nav{
+    width: 220px;
+    padding: 0 0 .75rem;
+}
+
+.main-container.admin nav{
+    background: #fff2f2;
+    border: 1px solid var(--light-pink);
+}
+
+.main-container.user nav{
+    background: #FDFDFD;
+    border: 1px solid rgba(92, 89, 89, .2);
+}
+
+.main-container nav img.tc-logo{
+    width: 140px;
+    height: 100px;
+    object-fit: contain;
+    padding: 0 1rem;
+}
+
+.main-container nav ul.nav-list{
+    height: calc(100% - 150px);
+    width: 100%;
+    overflow-y: auto;
+    list-style: none;
+    padding-left: 0;
+}
+
+
+
+
+.main-container nav ul.nav-list li{
+    padding: .45rem 1.2rem;
+    transition: ease-in-out .25s;
+}
+
+
+.main-container nav ul.nav-list li:not(:last-child) {
+    margin-bottom: .5rem;
+}
+
+.main-container nav ul.nav-list li a{
+    display: flex;
+    align-items: center;
+    color: var(--dark-pink);
+    text-decoration: none;
+    transition: ease-in-out .25s;
+    
+}
+
+.main-container nav ul.nav-list li a img{
+    width: 20px;
+    height: 20px;
+    margin-right: .25rem;
+    display: block;
+    transition: ease-in-out .25s;
+    filter: brightness(0) saturate(100%) invert(8%) sepia(36%) saturate(3849%) hue-rotate(314deg) brightness(98%) contrast(95%);
+}
+
+.main-container nav ul.nav-list li:hover{
+    background: var(--dark-pink);
+  
+}
+
+.main-container nav ul.nav-list li:hover a{
+    color: var(--white);
+}
+
+
+.main-container nav ul.nav-list li:hover img{
+    filter: brightness(0) saturate(100%) invert(100%) sepia(92%) saturate(0%) hue-rotate(227deg) brightness(105%) contrast(110%);
+}
+
+
+a.signout-link{
+    padding: .45rem 1.2rem;
+    display: flex;
+    align-items: center;
+    color: var(--dark-pink);
+    text-decoration: none;
+    transition: ease-in-out .25s;
+}
+
+a.signout-link img{
+    width: 20px;
+    height: 20px;
+    margin-right: .25rem;
+}
+
+a.signout-link:hover{
+    color: var(--main-pink);
+}
+.main-container section.main{
+    flex-grow: 100;
+    padding: 1.5rem 2rem;
+    height: 100%;
+    overflow-y: auto;
+}
+
+section.main .main-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+.breadcrumb .breadcrumb-item{
+    font-weight: 500;
+}
+
+.breadcrumb .separator{
+    margin: 0 .4rem;
+    opacity: .5;
+}
+
+.breadcrumb .breadcrumb-item.sub{
+    opacity: .8;
+    text-decoration: none;
+    color: var(--bs-gray);
+}
+
+.breadcrumb .breadcrumb-item.sub:hover{
+    text-decoration: underline;
+}
+
+.main-header .user-section{
+    display: flex;
+    align-items: center;
+}
+
+.main-header .user-section .user-icon{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #FBA600;
+}
+
+.main-header .user-section .user-icon img{
+    width: 17px;
+    height: 17px;
+    filter: brightness(0) saturate(100%) invert(93%) sepia(3%) saturate(1478%) hue-rotate(312deg) brightness(97%) contrast(122%);
+}
+
+.main-header .user-section .user-name{
+    margin-left: .65rem;
+    opacity: .8;
+}
+
+.layout-load-section{
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.layout-load-section .spinner{
+    width: 22px;
+    height: 22px;
+    margin-right: .5rem;
+}
+.layout-load-section.process-section span{
+    color: var(--dark-pink);
+}
+
+.layout-load-section.error-section img{
+    width: 22px;
+    height: 22px;
+    margin-right: .5rem;
+    filter: brightness(0) saturate(100%) invert(18%) sepia(79%) saturate(4366%) hue-rotate(354deg) brightness(103%) contrast(132%);
+}
+.layout-load-section.error-section span{
+    color: var(--red);
+    font-size: .95rem;
+}
+
+.img-icon img{
+    width: 24px;
+    height: 24px;
+    filter: brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(0%) hue-rotate(71deg) brightness(104%) contrast(104%);
+}
+
+.data-grid .grid-item{
+    background: var(--white);
+    padding: 1.2rem .75rem;
+    border-radius: 16px;
+    box-shadow: 0 0 1px 2px rgba(255, 196, 196, .06), 0 0 2px 3px rgba(255, 196, 196, .1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: ease-in-out .25s;
+    position: relative;
+}
+
+.grid-item .delete-icon{
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: transparent;
+    border: 1px solid transparent;
+    outline: none;
+    transition: ease-in-out .25s;
+}
+.grid-item .delete-icon:focus{
+    outline: none;
+}
+
+.grid-item .delete-icon:hover{
+    cursor: pointer;
+    color: var(--red);
+    filter: brightness(0) saturate(100%) invert(18%) sepia(98%) saturate(7400%) hue-rotate(359deg) brightness(94%) contrast(117%);
+}
+.data-grid .grid-item .delete-icon .icon{
+    width: 20px;
+    height: 20px;
+    color: var(--red);
+}
+
+.grid-item .img-icon{
+    width: 50px;
+    height: 50px;
+    background: var(--main-pink);
+    color: var(--white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+
+}
+
+.grid-item .name{
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+.grid-item .user-email,
+.grid-item .user-phone{
+    opacity: .8;
+    font-size: .9rem;
+}
+
+
+.grid-item .user-membership{
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+
+.grid-item .application-date{
+    font-size: .95rem;
+    opacity: .8;
+}
+
+.grid-item.transition{
+    opacity: 0;
+    transform: translateX(-40px);
+}
+
+.grid-item .date{
+    font-size: .9rem;
+}
+
+.grid-item .data-row{
+    font-size: .95rem;
+}
+
+
+.modal .modal-element .modal-body .form-fields{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.modal .modal-element .modal-body .form-fields .field-item{
+    width: 100%;
+    flex: 0 0 auto;
+    margin-bottom: 1rem;
+}
+
+.modal .modal-element .modal-body .form-fields .field-item.half-width{
+    width: calc(50% - .75rem);
+}
+.modal .modal-element .modal-body .form-fields  .field-item label{
+    font-weight: 500;
+    font-size: .9rem;
+    margin-bottom: .25rem;
+}
+
+.modal.event-booking-modal h5{
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.modal.event-booking-modal .event-date{
+    font-size: .95rem;
+    opacity: .9;
+}
+
+.modal.space-booking-modal .field-item label{
+    font-weight: 500;
+}

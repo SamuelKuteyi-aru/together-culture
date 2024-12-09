@@ -1,0 +1,26 @@
+.resend-section{
+    width: fit-content;
+}
+
+.input-container {
+    max-width: 300px;
+    margin: 0 auto;
+    display: block;
+}
+
+.resend-btn{
+    font-size: .95rem;
+    color: var(--dark-pink);
+    font-weight: 600;
+    background: transparent;
+    border: 1px solid transparent;
+    display: block;
+    margin: 0.5rem auto;
+}
+.resend-btn:not(:disabled):hover{
+    opacity: .75;
+    cursor: pointer;
+}
+.resend-btn:disabled{
+    opacity: .4;
+}

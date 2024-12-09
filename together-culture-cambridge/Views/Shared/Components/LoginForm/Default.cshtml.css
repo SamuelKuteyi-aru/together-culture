@@ -1,0 +1,9 @@
+.input-section label{
+    font-weight: 500;
+    display: block;
+    margin-bottom: .3rem;
+}
+
+.btn-container button{
+    padding: .4rem 0;
+}

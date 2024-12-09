@@ -46,3 +46,14 @@ button.accept-policy {
   white-space: nowrap;
   line-height: 60px;
 }
+
+
+button.subscribe-btn{
+  font-size: .9rem;
+}
+
+button.subscribe-btn img{
+  width: 18px;
+  height: 18px;
+  filter: brightness(0) saturate(100%) invert(100%) sepia(99%) saturate(2%) hue-rotate(323deg) brightness(107%) contrast(100%); 
+}

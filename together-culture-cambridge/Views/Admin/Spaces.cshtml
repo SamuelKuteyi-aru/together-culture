@@ -1,0 +1,15 @@
+@{
+    ViewBag.Title = "Spaces";
+    Layout = "_AdminLayout";
+}
+
+
+<div class="admin-spaces-page">
+    <div class="top-row d-flex justify-content-end align-items-center">
+        <button class="button button-primary d-flex align-items-center space-create-btn">
+            <box-icon size="sm" name="plus"></box-icon>
+            <span>Create Space</span>
+        </button>
+    </div>
+    @await Component.InvokeAsync("Spaces")
+</div>

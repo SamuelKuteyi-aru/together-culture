@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <title>@ViewData["Title"] - Together Culture Cambridge</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/main.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/together-culture-cambridge.styles.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/register-styles.css" asp-append-version="true"/>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <link rel="stylesheet" href="~/css/admin-auth.css" asp-append-version="true"/>
+</head>
+<body class="body-neutral">
+<main class="w-100 min-vh-100 d-flex flex-column justify-content-center align-items-center">
+    @RenderBody()
+</main>
+
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

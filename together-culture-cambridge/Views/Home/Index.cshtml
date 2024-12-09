@@ -2,7 +2,199 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
+
+<section class="banner d-flex justify-content-center align-items-center">
+    <div class="banner-bg position-absolute">
+        <div class="bg-content position-relative">
+            <div class="bg-content-upper">
+                <div class="content position-relative w-100 h-100"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="banner-content">
+        <div class="banner-title d-flex">
+            <span>Help Others.</span>
+            <span class="main">Collaborate.</span>
+            <span>Experiment.</span>
+        </div>
+        
+        
+        <div class="banner-description mx-auto text-center my-3">
+            <div> Building stronger bonds through shared experiences,</div>
+            <div> Where every voice matters and togetherness thrives.</div>
+        </div>
+        
+        <div class="banner-images d-flex mx-auto my-5">
+            <div class="image-content">
+                <header>Help Others</header>
+                <img src="images/work-together.png" 
+                     alt="Work together"
+                />
+            </div>
+            <div class="image-content main">
+                <header>Collaborate</header>
+                <img
+                    src="images/team-collaboration.png"
+                    alt="Team collaboration"
+                />
+                <button class="button button-primary">
+                    View memberships
+                </button>
+            </div>
+            <div class="image-content">
+                <header>Experiment</header>
+                <img
+                    src="images/art.jpg"
+                    alt="Art"
+                />
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="community page-section">
+    <div class="d-flex align-items-center justify-content-between section-heading">
+        <div class="section-item">
+            <div class="section-label opacity-75">
+                Explore Community
+            </div>
+            <div class="section-heading">
+                Building a more inclusive and ecological economy
+                in Cambridge.
+            </div>
+        </div>
+        <div class="section-item">
+            <p class="section-text">
+                For every 100 paying members, 25 memberships are offered free to people facing financial hardship.
+            </p>
+        </div>
+    </div>
+    
+    <div class="features d-flex">
+        <div class="feature-item">
+            <img src="icons/community.svg" alt="community"/>
+            <h3>Community</h3>
+            
+            <p>Our goal is to build a tight-knit community
+                of people who share the same interests and bring everyone
+                together to foster a thriving community of creative
+                minds.</p>
+        </div>
+        <div class="feature-item">
+            <img src="icons/workspace.svg" alt="work space"/>
+            <h3>Creativity</h3>
+            
+            <p>
+                We aim to help people unlock their full creative 
+                potential and our workspaces are built solely with
+                that purpose in mind.
+            </p>
+        </div>
+        <div class="feature-item">
+            <img src="icons/people.svg" alt="people"/>
+            <h3>Inclusivity</h3>
+            <p>
+                We welcome everyone from different backgrounds 
+                and identities to our spaces. Our goal is to
+                promote diversity and provide equal opportunities
+                for everyone regardless of background to come and 
+                thrive.
+            </p>
+        </div>
+    </div>
+</section>
+<section class="kite">
+    <div class="w-100 h-100 kite-banner d-flex flex-column align-items-center justify-content-center">
+        <h3 class="mb-5">Let's Go Fly The Kite!</h3>
+        <p>
+            The Kite is a neighbourhood that has an extraordinary heritage
+            of collaboration, creativity, and resilience.
+            It’s inspirational - that’s why we’re unearthing it.
+        </p>
+
+        <p>
+            Curious? You’re invited to learn more!
+        </p>
+
+        <a class="button">
+            Find out more
+        </a>
+
+        <img src="images/musicians.jpg" class="bg-image" alt="fly the kite"/>
+        <div class="bg-overlay top-0 left-0 w-100 h-100 position-absolute"></div>
+    </div>
+
+
+</section>
+
+<section class="memberships">
+    <div class="page-section">
+        <header>Explore our memberships</header>
+        
+        <p class="section-description text-center">
+            We offer different ranges of affordable memberships for
+            people at different income levels.
+        </p>
+        
+        <div class="membership-types d-flex">
+            <div class="item">
+                <img src="icons/community-home.svg" alt="community members"/>
+                <div class="heading">Community Member</div>
+                <p>
+                    Join our burgeoning community of open-minded and curious 
+                    people and make 5 Ftizroy Street your home away from home.
+                </p>
+                
+                <p>
+                    Membership provides free or discounted tickets to all events,
+                    collaborative and creative skills development workshops.
+                </p>
+                
+                <button class="button">
+                    <span>Learn More</span>
+                    <img src="icons/arrow-right.svg" alt="Learn more"/>
+                </button>
+            </div>
+            <div class="item">
+                <img src="icons/key.svg" alt="key access members"/>
+                <div class="heading">Key Access Member</div>
+                
+                <p>
+                    Join our burgeoning community of open-minded and curious 
+                    people and make 5 Ftizroy Street your home away from home.
+                </p>
+                
+                <p>
+                    Find a supportive and collaborative network of like-minded change makers.
+                </p>
+                <button class="button">
+                    <span>Learn More</span>
+                    <img src="icons/arrow-right.svg" alt="Learn more"/>
+                </button>
+            </div>
+            <div class="item">
+                <img src="icons/edit-create.svg" alt="creative workspace members"/>
+                <div class="heading">Creative Workspace Member</div>
+                <p>
+                    Enjoy all the perks of Community Membership, plus 24/7 access 
+                    to Together Culture Fitzroy including a dedicated workspace, 
+                    storage space, and cohort of Workspace Members with which to 
+                    build collaborative relationships.
+                </p>
+
+                <button class="button">
+                    <span>Learn More</span>
+                    <img src="icons/arrow-right.svg" alt="Learn more"/>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+@await Component.InvokeAsync("Newsletter")
+<!--<div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+</div>-->
