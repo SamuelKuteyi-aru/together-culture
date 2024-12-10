@@ -32,6 +32,7 @@
                      alt="Work together"
                 />
             </div>
+            
             <div class="image-content main">
                 <header>Collaborate</header>
                 <img
@@ -39,9 +40,10 @@
                     alt="Team collaboration"
                 />
                 <button class="button button-primary">
-                    View memberships
+                    <a asp-area="" asp-controller="EndUser" asp-action="Register" class="button button-primary">Register</a>
                 </button>
             </div>
+            
             <div class="image-content">
                 <header>Experiment</header>
                 <img
@@ -118,10 +120,10 @@
             Curious? You’re invited to learn more!
         </p>
 
-        <a class="button">
+        <a asp-area="" asp-controller="EndUser" asp-action="Register" class="button button-secondary">
             Find out more
         </a>
-
+        
         <img src="images/musicians.jpg" class="bg-image" alt="fly the kite"/>
         <div class="bg-overlay top-0 left-0 w-100 h-100 position-absolute"></div>
     </div>
@@ -157,6 +159,7 @@
                     <img src="icons/arrow-right.svg" alt="Learn more"/>
                 </button>
             </div>
+            
             <div class="item">
                 <img src="icons/key.svg" alt="key access members"/>
                 <div class="heading">Key Access Member</div>
@@ -188,6 +191,7 @@
                     <span>Learn More</span>
                     <img src="icons/arrow-right.svg" alt="Learn more"/>
                 </button>
+                
             </div>
         </div>
     </div>

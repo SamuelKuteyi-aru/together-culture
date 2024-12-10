@@ -230,10 +230,9 @@ section.kite .kite-banner {
 }
 
 section.kite .kite-banner h3,
-section.kite .kite-banner p,
-section.kite .kite-banner a{
+section.kite .kite-banner p{
     position: relative;
-    z-index: 2;
+    z-index: 3;
 }
 
 section.kite .kite-banner h3 {
@@ -247,19 +246,7 @@ section.kite .kite-banner p {
     opacity: .8;
 }
 
-section.kite .kite-banner a {
-    color: var(--dark-pink);
-    background: var(--white);
-    margin-top: 1rem;
-    font-size: 1rem;
-    padding: .35rem 1.2rem;
-}
 
-section.kite .kite-banner a:hover {
-    background: transparent;
-    border: 1px solid var(--white);
-    color: var(--white);
-}
 section.kite .kite-banner a:hover + img {
     filter: blur(6px);
 }

@@ -136,3 +136,23 @@ footer .rights{
 .w-fit{
   width: fit-content;
 }
+
+section.kite .kite-banner a {
+  
+  position: relative;
+  z-index: 2;
+}
+
+section.kite .kite-banner a {
+  color: var(--dark-pink);
+  background: var(--white);
+  margin-top: 1rem;
+  font-size: 1rem;
+  padding: .35rem 1.2rem;
+}
+
+section.kite .kite-banner a:hover {
+  background: transparent;
+  border: 1px solid var(--white);
+  color: var(--white);
+}
