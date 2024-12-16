@@ -141,60 +141,7 @@ namespace together_culture_cambridge.Controllers
             return Ok(eventItem.Value);
         }
 
-        // GET: EventBooking/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var eventBooking = await _context.EventBooking.FindAsync(id);
-            if (eventBooking == null)
-            {
-                return NotFound();
-            }
-            ViewData["EndUserId"] = new SelectList(_context.EndUser, "Id", "Id", eventBooking.EndUserId);
-            ViewData["EventId"] = new SelectList(_context.Event, "Id", "Id", eventBooking.EventId);
-            return View(eventBooking);
-        }
-
-        // POST: EventBooking/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,EventId,EndUserId")] EventBooking eventBooking)
-        {
-            if (id != eventBooking.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(eventBooking);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!EventBookingExists(eventBooking.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["EndUserId"] = new SelectList(_context.EndUser, "Id", "Id", eventBooking.EndUserId);
-            ViewData["EventId"] = new SelectList(_context.Event, "Id", "Id", eventBooking.EventId);
-            return View(eventBooking);
-        }
+     
 
         // GET: EventBooking/Delete/5
         public async Task<IActionResult> Delete(int? id)
